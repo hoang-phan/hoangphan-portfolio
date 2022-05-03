@@ -6,13 +6,13 @@ class BaseObject {
     this.scale = scale;
     this.rotation = rotation;
     this.wireframeMaterial = wireframeMaterial;
+    this.originalScale = this.scale;
   }
 
   loadObjects(obj) {
     this.obj = this.loadObject(obj);
     if (this.wireframeMaterial) {
-      this.wireframeObj = this.loadWireframeObj();
-      this.hideObjects();  
+      this.buildWireframe();
     }
   }
 
@@ -21,45 +21,40 @@ class BaseObject {
     obj.position.set(this.position.x, this.position.y, this.position.z);
     obj.scale.set(this.scale.x, this.scale.y, this.scale.z);
     obj.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
+    obj.visible = false;
 
     this.scene.add(obj);
     return this.buildObject(obj);
   }
 
-  loadWireframeObj() {
-    const wireframeObj = this.obj.clone(true);
-    wireframeObj.name = `${name}wireframed`;
-    this.scene.add(wireframeObj);
-
-    return this.buildWireframe(wireframeObj);
-  }
-
-  hideObjects() {
-    this.obj.visible = false;
-    this.wireframeObj.visible = false;
-  }
-
   transitionScale(currentFrame, totalFrame, direction) {
-    this.wireframeObj.scale[direction] = this.obj.scale[direction] * currentFrame / totalFrame
+    const growFrame = totalFrame - 10;
+    if (currentFrame <= growFrame) {
+      this.obj.scale[direction] = this.originalScale[direction] * Math.pow(currentFrame, 2) / Math.pow(growFrame, 2) * 1.2;
+    } else {
+      this.obj.scale[direction] = this.originalScale[direction] * (1 + (totalFrame - currentFrame) / 100.0);
+    }
   }
 
   buildAnimate(fromFrame, toFrame, frame) {
-    if (frame > toFrame + 1 || frame < fromFrame) {
+    if (frame > toFrame + this.childCount() || frame < fromFrame) {
       return;
     }
 
     if (frame == fromFrame) {
-      this.wireframeObj.visible = true;
+      this.obj.visible = true;
     }
 
     if (frame > toFrame) {
-      this.wireframeObj.visible = false;
-      this.obj.visible = true;
-      this.scene.remove(this.wireframeObj);
+      this.showOriginalMaterial(frame - toFrame - 1);
       return;
     }
 
     this.buildFrameAnimate(fromFrame, toFrame, frame);
+  }
+
+  childCount() {
+    return 1;
   }
 }
 

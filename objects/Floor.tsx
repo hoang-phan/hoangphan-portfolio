@@ -1,10 +1,9 @@
 import Wall from './Wall';
 
 class Floor extends Wall {
-  buildWireframe(obj) {
-    obj.material = this.wireframeMaterial;
-    obj.scale.z = 0;
-    return obj;
+  buildWireframe() {
+    this.obj.material = this.wireframeMaterial;
+    this.obj.scale.z = 0;
   }
 
   buildFrameAnimate(fromFrame, toFrame, frame) {

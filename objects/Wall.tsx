@@ -21,10 +21,13 @@ class Wall extends BaseObject {
     return obj;
   }
 
-  buildWireframe(obj) {
-    obj.material = this.wireframeMaterial;
-    obj.scale.x = 0;
-    return obj;
+  buildWireframe() {
+    this.obj.material = this.wireframeMaterial;
+    this.obj.scale.x = 0;
+  }
+
+  showOriginalMaterial() {
+    this.obj.material = this.wallMaterial;
   }
 
   buildFrameAnimate(fromFrame, toFrame, frame) {

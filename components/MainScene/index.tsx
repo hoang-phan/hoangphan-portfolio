@@ -125,7 +125,7 @@ const MainScene: React.FC = () => {
   }, []);
 
   const animate = () => {
-    if (frame < 240) {
+    if (frame < 245) {
       frame += 1;
 
       objects['floor'].buildAnimate(10, 40, frame);
@@ -138,7 +138,7 @@ const MainScene: React.FC = () => {
       objects['imac'].buildAnimate(195, 220, frame);
       objects['macbook'].buildAnimate(210, 230, frame);
       objects['certframe'].buildAnimate(215, 235, frame);
-    } else if (frame < 241) {
+    } else if (frame < 246) {
       frame += 1;
       setReady(true);
       moveMenu();
@@ -164,8 +164,8 @@ const MainScene: React.FC = () => {
 
     vector.project(_camera);
 
-    vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 4 ) - canvas.width / 2 * 15 / 100;
-    vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 4 );
+    vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 / devicePixelRatio ) - canvas.width / devicePixelRatio * 15 / 100;
+    vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 2 / devicePixelRatio );
     vector.z = 0;
     return vector;
   }

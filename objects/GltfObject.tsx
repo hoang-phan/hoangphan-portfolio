@@ -7,6 +7,8 @@ class GltfObject extends BaseObject {
     super(scene, name, position, scale, rotation, wireframeMaterial);
     this.glbPath = glbPath;
     this.options = options;
+    this.materialMap = {};
+    this.children = [];
   }
 
   load() {
@@ -29,7 +31,7 @@ class GltfObject extends BaseObject {
     obj.receiveShadow = receiveShadow;
     obj.castShadow = castShadow;
 
-    obj.traverse(function (child) {
+    obj.traverse((child) => {
       if (child.isMesh) {
         child.castShadow = castShadow;
         child.receiveShadow = receiveShadow;
@@ -37,23 +39,34 @@ class GltfObject extends BaseObject {
     });
 
     const box = new THREE.Box3().setFromObject(obj);
+    console.log(box.max.clone().sub(box.min));
     this.centerPoint = box.min.clone().add(box.max).divideScalar(2);
     return obj;
   }
 
-  buildWireframe(obj) {
+  buildWireframe() {
     const that = this;
-    obj.scale.y = 0;
-    obj.traverse(function (child) {
+    this.obj.scale.y = 0;
+    this.obj.traverse((child) => {
       if (child.material) {
+        this.children.push(child);
+        that.materialMap[child.uuid] = child.material;
         child.material = that.wireframeMaterial;
       }
     });
-    return obj;
+  }
+
+  showOriginalMaterial(childIndex) {
+    const child = this.children[childIndex];
+    child.material = this.materialMap[child.uuid];
   }
 
   buildFrameAnimate(fromFrame, toFrame, frame) {
     this.transitionScale(frame - fromFrame, toFrame - fromFrame, 'y');
+  }
+
+  childCount() {
+    return this.children.length;
   }
 }
 

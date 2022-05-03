@@ -4,7 +4,7 @@ const Container = styled.div`
   position: absolute;
   top: 5px;
   left: 50px;
-  right: 525px;
+  right: calc(30% + 95px);
   bottom: calc(30% - 5px);
   color: #red;
   z-index: 100;
@@ -38,7 +38,7 @@ const Container = styled.div`
   .lyr1-4 {
     background-image: url("lyr1-4.png");
     background-repeat: repeat-x;
-    background-position: 0 170%;
+    background-position-y: bottom -150px;
   }
 
   .lyr2-1 {
@@ -183,6 +183,8 @@ const Scene = styled.div`
   width: 100%;
   height: 100%;
   overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   ::-webkit-scrollbar {
     display: none;
@@ -196,6 +198,8 @@ const Scene = styled.div`
     width: 100%;
     height: 2000px;
     background-color: transparent;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 `;
 
