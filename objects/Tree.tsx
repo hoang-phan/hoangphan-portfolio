@@ -8,7 +8,7 @@ class Tree extends GltfObject {
       'tree.glb',
       'tree',
       position,
-      new THREE.Vector3(1, 1, 1),
+      new THREE.Vector3(0.03, 0.03, 0.03),
       rotation,
       wireframeMaterial,
       {}

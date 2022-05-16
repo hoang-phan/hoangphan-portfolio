@@ -11,7 +11,7 @@ import Education from '../Education';
 import Employment from '../Employment';
 import PetProjects from '../PetProjects';
 import { Container, Header, BodyModel, Hero, Menu } from './styles'
-import { Desk, Macbook, Imac, Shelf, Certframe, Tree, Chair, Wall, Floor } from '../../objects';
+import { Desk, Macbook, Imac, Shelf, Board, Tree, Chair, Wall, Floor } from '../../objects';
 import TWEEN from 'tween/tween';
 let req = null;
 let frame = 0;
@@ -95,9 +95,9 @@ const MainScene: React.FC = () => {
         macbook: new Macbook(scene, new THREE.Vector3(-1.4,0,0),new THREE.Vector3(0,1.1 * Math.PI,0), wireframeMaterial, new THREE.Vector3(0.5, 0, 1.5), 7),
         imac: new Imac(scene, new THREE.Vector3(0.5,-0.035,-0.1),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0, 0, 1.5), 4.5),
         shelf: new Shelf(scene, new THREE.Vector3(-2,-1.55,-2.45),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0.1, 0.1, 1.5), 3.5),
-        certframe: new Certframe(scene, new THREE.Vector3(2.88,1,1),new THREE.Vector3(0,-Math.PI / 2,0), wireframeMaterial, new THREE.Vector3(-1.5, 0, 0), 6.5),
-        tree: new Tree(scene, new THREE.Vector3(2.4,-1.47,-2.3),new THREE.Vector3(0,-Math.PI / 2,0), wireframeMaterial),
-        chair: new Chair(scene, new THREE.Vector3(0.5,-1.52,1.8),new THREE.Vector3(0,-2 * Math.PI / 3,0), wireframeMaterial),
+        board: new Board(scene, new THREE.Vector3(2.9,-1.57,1),new THREE.Vector3(0,-Math.PI / 2,0), wireframeMaterial, new THREE.Vector3(-1.5, 0, 0), 2.5),
+        tree: new Tree(scene, new THREE.Vector3(1,-1.57,-2.16),new THREE.Vector3(0,Math.PI / 2,0), wireframeMaterial),
+        chair: new Chair(scene, new THREE.Vector3(-0.5,-1.52,1.8),new THREE.Vector3(0,-2 * Math.PI / 3,0), wireframeMaterial),
         wall1: new Wall(scene, '1', 6, 4, new THREE.Vector3(0,0.46,-3), new THREE.Vector3(0,0,0), wallMaterial, wireframeMaterial),
         wall2: new Wall(scene, '2', 6, 4, new THREE.Vector3(2.98,0.46,0), new THREE.Vector3(0,Math.PI / 2,0), wallMaterial, wireframeMaterial),
         floor: new Floor(scene, '3', 6.05, 6.05, new THREE.Vector3(0,-1.64,0), new THREE.Vector3(-Math.PI / 2,0,0), floorMaterial, wireframeMaterial),
@@ -138,7 +138,7 @@ const MainScene: React.FC = () => {
       objects['chair'].buildAnimate(185, 200, frame);
       objects['imac'].buildAnimate(195, 220, frame);
       objects['macbook'].buildAnimate(210, 230, frame);
-      objects['certframe'].buildAnimate(215, 235, frame);
+      objects['board'].buildAnimate(215, 235, frame);
     } else if (frame < 246) {
       frame += 1;
       setReady(true);
@@ -152,7 +152,7 @@ const MainScene: React.FC = () => {
 
   const moveMenu = () => {
     const screenPositions = {};
-    ['imac', 'macbook', 'certframe', 'shelf'].forEach((key) => {
+    ['imac', 'macbook', 'board', 'shelf'].forEach((key) => {
       screenPositions[key] = getPositionInScreen(objects[key].centerPoint, renderer.domElement);
     });
     setObject2DPositions(screenPositions);
@@ -263,8 +263,8 @@ const MainScene: React.FC = () => {
       </Header>
       <Menu>
         {
-          object2DPositions.certframe && (
-            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.certframe.y - 62, left: object2DPositions.certframe.x - 62}} onClick={() => openPage('certframe', 'testimonials')}>
+          object2DPositions.board && (
+            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.board.y - 62, left: object2DPositions.board.x - 62}} onClick={() => openPage('board', 'testimonials')}>
               <div className="menu-label">
                 <CurvedText text="Testimonials" objectSize={40}/>
               </div>
