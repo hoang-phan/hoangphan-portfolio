@@ -39,7 +39,6 @@ class GltfObject extends BaseObject {
     });
 
     const box = new THREE.Box3().setFromObject(obj);
-    console.log(box.max.clone().sub(box.min));
     this.centerPoint = box.min.clone().add(box.max).divideScalar(2);
     return obj;
   }

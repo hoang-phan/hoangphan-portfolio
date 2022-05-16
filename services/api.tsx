@@ -36,10 +36,6 @@ class API {
   post = this.request.bind(this, 'POST');
   patch = this.request.bind(this, 'PATCH');
   delete = this.request.bind(this, 'DELETE');
-
-  getProjects () {
-    return this.get('projects')
-  }
 }
 
 export default new API();

@@ -9,6 +9,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CurvedText from '../CurvedText';
 import Education from '../Education';
 import Employment from '../Employment';
+import PetProjects from '../PetProjects';
 import { Container, Header, BodyModel, Hero, Menu } from './styles'
 import { Desk, Macbook, Imac, Shelf, Certframe, Tree, Chair, Wall, Floor } from '../../objects';
 import TWEEN from 'tween/tween';
@@ -327,6 +328,11 @@ const MainScene: React.FC = () => {
         {
           pageOpening === "employment" && (
             <Employment />
+          )
+        }
+        {
+          pageOpening === "pet-projects" && (
+            <PetProjects />
           )
         }
       </Menu>

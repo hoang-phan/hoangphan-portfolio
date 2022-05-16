@@ -6,7 +6,6 @@ const Container = styled.div`
   left: 50px;
   right: calc(30% + 95px);
   bottom: calc(30% - 5px);
-  color: #red;
   z-index: 100;
   contain: content;
 

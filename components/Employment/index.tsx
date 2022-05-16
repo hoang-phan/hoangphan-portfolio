@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Scene } from './styles';
 import API from '../../services/api';
+import { AppContext } from '../../contexts/AppProvider';
 
 const Employment: React.FC = () => {
   const [gameState, setGameState] = useState({
@@ -8,7 +9,8 @@ const Employment: React.FC = () => {
     direction: "right", frame: 0,
     activeProjectIndex: -1, prevIndex: -1,
   })
-  const [projects, setProjects] = useState([]);
+  const context = useContext(AppContext);
+  const projects = context.projects;
   const [changingProject, setChangingProject] = useState(false);
   const g = -1.9;
   const { activeProjectIndex, prevIndex } = gameState;
@@ -18,10 +20,6 @@ const Employment: React.FC = () => {
   const prevCompany = prevProject && prevProject.company;
 
   const updateGameState = (newData) => setGameState(gameState =>  ({...gameState, ...newData}));
-
-  useEffect(() => {
-    loadProjects();
-  }, []);
 
   useEffect(() => {
     const nextCycle = setTimeout(() => {
@@ -62,11 +60,6 @@ const Employment: React.FC = () => {
       }
     }
   }, [gameState]);
-
-  const loadProjects = async () => {
-    const projects = await API.getProjects();
-    setProjects(projects);
-  }
 
   const getCharacterState = () => {
     if (gameState.y > 0) {
