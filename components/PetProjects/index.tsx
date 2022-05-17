@@ -4,7 +4,7 @@ import { Container, ProjectCardWrapper, ProjectDetails } from './styles';
 import PetProject from './PetProject';
 import { AppContext } from '../../contexts/AppProvider';
 
-const PetProjects: React.FC = () => {
+const PetProjects: React.FC = ({pageBound}) => {
   const context = useContext(AppContext);
   const projects = context.petProjects;
   const [activeProject, setActiveProject] = useState(null);
@@ -22,8 +22,13 @@ const PetProjects: React.FC = () => {
     return classes.join(" ");
   }
 
+  const width = pageBound[3] * 1.24;
+  const height = pageBound[2] * 0.91;
+  const top = pageBound[0] + height * 0.01;
+  const left = pageBound[1] - width * 0.1;
+
   return (
-    <Container>
+    <Container style={{top, left, width, height}}>
       <PetProject
         project={projects[0]}
         hero={true}

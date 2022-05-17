@@ -2,10 +2,6 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   position: absolute;
-  top: 5px;
-  left: 50px;
-  right: calc(30% + 95px);
-  bottom: calc(30% - 5px);
   z-index: 100;
   contain: content;
 
@@ -26,6 +22,7 @@ const Container = styled.div`
     background-image: url("lyr1-2.png");
     background-repeat: no-repeat;
     background-position: 7% 30%;
+    background-size: auto 30%;
   }
 
   .lyr1-3 {
@@ -37,7 +34,8 @@ const Container = styled.div`
   .lyr1-4 {
     background-image: url("lyr1-4.png");
     background-repeat: repeat-x;
-    background-position-y: bottom -150px;
+    background-size: auto 30%;
+    background-position-y: bottom -10%;
   }
 
   .lyr2-1 {
@@ -69,11 +67,12 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80px;
-    height: 100px;
     z-index: 10;
     background-color: transparent;
-    transform: scale(0.3);
+
+    img {
+      height: 100%;
+    }
   }
 
   @keyframes opendescription {
@@ -98,11 +97,11 @@ const Container = styled.div`
 
     h4, p {
       text-align: left;
-      margin-right: 60px;
+      margin-right: 15%;
     }
 
     h3 {
-      margin-right: 90px;
+      margin-right: 20%;
       text-align: right;
     }
 
@@ -115,12 +114,20 @@ const Container = styled.div`
         }
       }
     }
+
+    @media (max-width: 640px) {
+      font-size: 0.675rem;
+
+      h4.section-title {
+        display: none;
+      }
+    }
   }
 
   .milestones {
     z-index: 9999;
     position: absolute;
-    width: 100px;
+    width: 10%;
     height: 100%;
     right: 0;
     display: flex;
@@ -152,8 +159,6 @@ const Container = styled.div`
     .project {
       background-image: url("shuriken-1.png");
       background-size: 100% 100%;
-      width: 50px;
-      height: 50px;
       transition: transform 1s ease;
 
       @keyframes rotating {

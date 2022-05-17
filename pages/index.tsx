@@ -4,7 +4,6 @@ import { AppContext } from '../contexts/AppProvider'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import API from '../services/api';
 
 const MainScene = dynamic(() => import('../components/MainScene'), {
@@ -16,7 +15,7 @@ const Home: NextPage = () => {
   const { projects, setProjects } = useContext(AppContext);
 
   return (
-    <div>
+    <div style={{overflow: "hidden"}}>
       <Head>
         <title> Hoang Phan </title>
         <link rel="shortcut icon" href="/favicon.png" />

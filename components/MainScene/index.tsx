@@ -4,12 +4,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import WorkIcon from '@material-ui/icons/Work';
 import SchoolIcon from '@material-ui/icons/School';
 import PetsIcon from '@material-ui/icons/Pets';
-import StarsIcon from '@material-ui/icons/Stars';
+import FaceIcon from '@material-ui/icons/Face';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CurvedText from '../CurvedText';
 import Education from '../Education';
 import Employment from '../Employment';
 import PetProjects from '../PetProjects';
+import AboutMe from '../AboutMe';
 import { Container, Header, BodyModel, Hero, Menu } from './styles'
 import { Desk, Macbook, Imac, Shelf, Board, Tree, Chair, Wall, Floor } from '../../objects';
 import TWEEN from 'tween/tween';
@@ -31,16 +32,10 @@ const MainScene: React.FC = () => {
   const [object2DPositions, setObject2DPositions] = useState({});
   const [ready, setReady] = useState(false);
   const [pageOpening, setPageOpening] = useState(null);
+  const [pageBound, setPageBound] = useState([0, 0, 0, 0]);
 
-  const handleWindowResize = useCallback(() => {
-    const { current: container } = refBody;
-    if (container && renderer) {
-      const scw = container.clientWidth;
-      const sch = container.clientHeight;
-
-      renderer.setSize(scw, sch);
-    }
-  }, [renderer]);
+  const caretSize = window.innerWidth > 812 ? 144 : Math.min(window.innerWidth, window.innerHeight) * 0.15;
+  const caretFontSize = window.innerWidth > 640 ? "large" : "normal";
 
   useEffect(() => {
     const { current: container } = refBody;
@@ -48,6 +43,7 @@ const MainScene: React.FC = () => {
     if (container && !renderer) {
       const scw = container.clientWidth;
       const sch = container.clientHeight;
+      const size = Math.min(scw, sch);
 
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -55,12 +51,12 @@ const MainScene: React.FC = () => {
       });
 
       renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(scw, sch);
+      renderer.setSize(size * 1.4, size * 1.4);
       renderer.outputEncoding = THREE.sRGBEncoding;
       container.appendChild(renderer.domElement);
       setRenderer(renderer);
 
-      const scale = 3;
+      const scale = 4;
       const camera = new THREE.OrthographicCamera(2 * scale, -2 * scale, scale, -scale, 0.01, 50000);
 
       camera.position.copy(initialCameraPosition);
@@ -92,8 +88,8 @@ const MainScene: React.FC = () => {
 
       const objects = {
         desk: new Desk(scene, new THREE.Vector3(-0.5,-1.59,0),new THREE.Vector3(0,-Math.PI/2,0), wireframeMaterial),
-        macbook: new Macbook(scene, new THREE.Vector3(-1.4,0,0),new THREE.Vector3(0,1.1 * Math.PI,0), wireframeMaterial, new THREE.Vector3(0.5, 0, 1.5), 7),
-        imac: new Imac(scene, new THREE.Vector3(0.5,-0.035,-0.1),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0, 0, 1.5), 4.5),
+        macbook: new Macbook(scene, new THREE.Vector3(-1.4,0,0),new THREE.Vector3(0,1.1 * Math.PI,0), wireframeMaterial, new THREE.Vector3(0.5, 0, 1.5), 8),
+        imac: new Imac(scene, new THREE.Vector3(0.5,-0.035,-0.1),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0, 0, 1.5), 4.3),
         shelf: new Shelf(scene, new THREE.Vector3(-2,-1.55,-2.45),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0.1, 0.1, 1.5), 3.5),
         board: new Board(scene, new THREE.Vector3(2.9,-1.57,1),new THREE.Vector3(0,-Math.PI / 2,0), wireframeMaterial, new THREE.Vector3(-1.5, 0, 0), 2.5),
         tree: new Tree(scene, new THREE.Vector3(1,-1.57,-2.16),new THREE.Vector3(0,Math.PI / 2,0), wireframeMaterial),
@@ -165,8 +161,11 @@ const MainScene: React.FC = () => {
 
     vector.project(_camera);
 
-    vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 / devicePixelRatio ) - canvas.width / devicePixelRatio * 15 / 100;
-    vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 2 / devicePixelRatio );
+    const offsetX = window.innerWidth > 640 ? -canvas.width * 0.15 / devicePixelRatio : 0;
+    const offsetY = window.innerWidth > 640 ? 0 : 100 / devicePixelRatio;
+
+    vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 / devicePixelRatio + canvas.getBoundingClientRect().left);
+    vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 2 / devicePixelRatio + canvas.getBoundingClientRect().top);
     vector.z = 0;
     return vector;
   }
@@ -239,6 +238,13 @@ const MainScene: React.FC = () => {
         _camera.updateProjectionMatrix();
       })
       .onComplete(function() {
+        const minBound = getPositionInScreen(objects[objName].box.min, renderer.domElement);
+        const maxBound = getPositionInScreen(objects[objName].box.max, renderer.domElement);
+        const top = Math.min(minBound.y, maxBound.y);
+        const bottom = Math.max(minBound.y, maxBound.y);
+        const left = Math.min(minBound.x, maxBound.x);
+        const right = Math.max(minBound.x, maxBound.x);
+        setPageBound([top, left, bottom - top, right - left]);
         setPageOpening(pageName);
       })
       .start();
@@ -249,90 +255,92 @@ const MainScene: React.FC = () => {
     resetScene();
   }
 
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowResize, false);
-
-    return () => {
-      window.removeEventListener('resize', handleWindowResize, false);
-    };
-  }, [renderer, handleWindowResize])
+  // const minBound = objects ? getPositionInScreen(objects["macbook"].box.min, renderer.domElement) : {x: 0, y: 0};
+  // const maxBound = objects ? getPositionInScreen(objects["macbook"].box.max, renderer.domElement) : {x: 0, y: 0};
 
   return (
     <Container>
       <Header>
       </Header>
       <Menu>
+        {/*<div style={{position: "absolute", zIndex: 999, top: minBound.y, left: minBound.x, width: 10, height: 10, background: "red"}} />
+        <div style={{position: "absolute", zIndex: 999, top: maxBound.y, left: maxBound.x, width: 10, height: 10, background: "green"}} />*/}
         {
           object2DPositions.board && (
-            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.board.y - 62, left: object2DPositions.board.x - 62}} onClick={() => openPage('board', 'testimonials')}>
+            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.board.y - caretSize / 2, left: object2DPositions.board.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('board', 'About Me')}>
               <div className="menu-label">
-                <CurvedText text="Testimonials" objectSize={40}/>
+                <CurvedText text="About Me" objectSize={caretSize * 0.4} />
               </div>
               <div className="menu-icon">
-                <StarsIcon fontSize="large"/>
+                <FaceIcon fontSize={caretFontSize}/>
               </div>
             </div>
           )
         }
         {
           object2DPositions.shelf && (
-            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.shelf.y - 62, left: object2DPositions.shelf.x - 62}} onClick={() => openPage('shelf', 'education')}>
+            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.shelf.y - caretSize / 2, left: object2DPositions.shelf.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('shelf', 'Education')}>
               <div className="menu-label">
-                <CurvedText text="Education" objectSize={40}/>
+                <CurvedText text="Education" objectSize={caretSize * 0.4} />
               </div>
               <div className="menu-icon">
-                <SchoolIcon fontSize="large"/>
+                <SchoolIcon fontSize={caretFontSize}/>
               </div>
             </div>
           )
         }
         {
           object2DPositions.macbook && (
-            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.macbook.y - 62, left: object2DPositions.macbook.x - 62}} onClick={() => openPage('macbook', 'pet-projects')}>
+            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.macbook.y - caretSize / 2, left: object2DPositions.macbook.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('macbook', 'Pet Projects')}>
               <div className="menu-label">
-                <CurvedText text="Pet Projects" objectSize={40}/>
+                <CurvedText text="Pet Projects" objectSize={caretSize * 0.4} />
               </div>
               <div className="menu-icon">
-                <PetsIcon fontSize="large"/>
+                <PetsIcon fontSize={caretFontSize}/>
               </div>
             </div>
           )
         }
         {
           object2DPositions.imac && (
-            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.imac.y - 62, left: object2DPositions.imac.x - 62}} onClick={() => openPage('imac', 'employment')}>
+            <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.imac.y - caretSize / 2, left: object2DPositions.imac.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('imac', 'Employment')}>
               <div className="menu-label">
-                <CurvedText text="Employment" objectSize={40}/>
+                <CurvedText text="Employment" objectSize={caretSize * 0.4} />
               </div>
               <div className="menu-icon">
-                <WorkIcon fontSize="large"/>
+                <WorkIcon fontSize={caretFontSize}/>
               </div>
             </div>
           )
         }
         {
-          <div className={`caret ${!pageOpening && 'hidden'}`} onClick={back}>
+          <div className={`caret ${!pageOpening && 'hidden'}`} style={{width: caretSize, height: caretSize}} onClick={back}>
             <div className="menu-label">
-              <CurvedText text="Back" objectSize={40}/>
+              <CurvedText text="Back" objectSize={caretSize * 0.4} />
             </div>
             <div className="menu-icon">
-              <ArrowBackIcon fontSize="large"/>
+              <ArrowBackIcon fontSize={caretFontSize}/>
             </div>
           </div>
         }
         {
-          pageOpening === "education" && (
-            <Education />
+          pageOpening === "About Me" && (
+            <AboutMe pageBound={pageBound} />
           )
         }
         {
-          pageOpening === "employment" && (
-            <Employment />
+          pageOpening === "Education" && (
+            <Education pageBound={pageBound} />
           )
         }
         {
-          pageOpening === "pet-projects" && (
-            <PetProjects />
+          pageOpening === "Employment" && (
+            <Employment pageBound={pageBound} />
+          )
+        }
+        {
+          pageOpening === "Pet Projects" && (
+            <PetProjects pageBound={pageBound} />
           )
         }
       </Menu>
@@ -344,7 +352,7 @@ const MainScene: React.FC = () => {
       <Hero>
         <div>
           <h1>Hoang Phan</h1>
-          <h2>Web Developer</h2>
+          <h2>{pageOpening || 'Web Developer'}</h2>
         </div>
       </Hero>
     </Container>

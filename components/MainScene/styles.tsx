@@ -35,6 +35,16 @@ const Header = styled.div`
 const BodyModel = styled.div`
   position: absolute;
   bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 640px) {
+    height: auto;
+    top: 120px;
+    width: 129.5%;
+    text-align: center;
+  }
 
   left: -15%;
   width: 100%;
@@ -69,13 +79,30 @@ const Hero = styled.div`
 
   h1 {
     font-size: 4rem;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     border-bottom: 3px solid #4f4338;
   }
 
   h2 {
     font-size: 2rem;
     letter-spacing: 5px;
+  }
+
+  @media (max-width: 640px) {
+    top: 10px;
+    left: 0;
+    max-width: 100%;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
   }
 `
 
@@ -84,17 +111,15 @@ const Menu = styled.div`
     position: fixed;
     z-index: 99;
     transition: left 0.3s ease, top 0.3s ease, opacity 0.3s ease;
-    width: 124px;
-    height: 124px;
     top: 100px;
     left: calc(100% - 200px);
 
     .menu-label {
       position: relative;
-      top: 12px;
-      left: 12px;
-      width: 100px;
-      height: 100px;
+      top: 8%;
+      left: 8%;
+      width: 84%;
+      height: 84%;
       border: 2px solid #4f4338;
       border-radius: 50%;
       background-color: rgb(255,255,255,0.6);
@@ -108,10 +133,10 @@ const Menu = styled.div`
 
     .menu-icon {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      width: 100px;
-      height: 100px;
+      top: 8%;
+      left: 8%;
+      width: 84%;
+      height: 84%;
       border: 2px solid #4f4338;
       border-radius: 50%;
       background-color: rgb(255,255,255,0.6);
@@ -121,28 +146,30 @@ const Menu = styled.div`
       transition: width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease;
     }
 
-    &:hover {
-      .menu-label {
-        top: 0;
-        left: 0;
-        width: 124px;
-        height: 124px;
-
-        svg {
-          opacity: 1;
-        }
-      }
-      .menu-icon {
-        width: 40%;
-        height: 40%;
-        top: 30%;
-        left: 30%;
-      }
-    }
-
     &.hidden {
       opacity: 0;
       pointer-events: none;
+    }
+
+    @media (min-width: 640.1px) {
+      &:hover {
+        .menu-label {
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+
+          svg {
+            opacity: 1;
+          }
+        }
+        .menu-icon {
+          width: 40%;
+          height: 40%;
+          top: 30%;
+          left: 30%;
+        }
+      }
     }
   }
 `

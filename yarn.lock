@@ -2342,6 +2342,11 @@ v8-compile-cache@^2.0.3:
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
   integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
 
+vara@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/vara/-/vara-1.4.0.tgz#4eb0f0a2c2cc54344edc4e43a23db6e22a883baf"
+  integrity sha512-5yi+GgV5sLmMYcU1Z3r+Xdgd5awDcP4ULHzTyiSL2J/VbjizgWzwlVMqXO5IqGR7GItzUcnPDksjr8xONaW22w==
+
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/which-boxed-primitive/-/which-boxed-primitive-1.0.2.tgz#13757bc89b209b049fe5d86430e21cf40a89a8e6"

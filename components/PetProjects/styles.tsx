@@ -2,13 +2,10 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   position: absolute;
-  top: 100px;
-  left: 75px;
-  right: calc(30% + 80px);
-  bottom: calc(10% + 60px);
   z-index: 100;
   contain: content;
   display: flex;
+  border-radius: 10px;
 `;
 
 const ProjectCardWrapper = styled.div`
@@ -107,6 +104,66 @@ const ProjectCard = styled.div`
       opacity: 0.1;
     }
   }
+
+  @media (pointer:none), (pointer:coarse) {
+    .backdrop {
+      opacity: 1 !important;
+    }
+
+    .content {
+      opacity: 1 !important;
+    }
+  }
+
+  @media (max-width: 910px) {
+    .content {
+      .tags {
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+
+        .tag {
+          font-size: 0.75em;
+        }
+      }
+
+      .actions {
+        button {
+          span.button-text {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .content {
+      .project-name {
+        font-size: 1em;
+      }
+
+      .tags {
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+
+        .tag {
+          font-size: 0.5em;
+        }
+      }
+
+      .actions {
+        button {
+          padding: 2px;
+          min-width: 40px;
+          width: 40px;
+          span.button-text {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
 `;
 
 const ProjectDetails = styled.div`
@@ -146,6 +203,10 @@ const ProjectDetails = styled.div`
     .details-container {
       left: 50%;
     }
+  }
+
+  @media (max-width: 640px) {
+    font-size: 0.75rem;
   }
 `;
 

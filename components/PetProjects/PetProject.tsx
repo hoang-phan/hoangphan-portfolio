@@ -19,18 +19,18 @@ const PetProject: React.FC = ({project, hero, active, setActive}) => {
         <div className="actions">
           <Button variant="contained" onClick={() => setActive(active ? null : project)}>
             <MoreIcon />
-            <span>{active ? "Less" : "More"}</span>
+            <span className="button-text">{active ? "Less" : "More"}</span>
           </Button>
           <a target="_blank" href={project.live_url || ""}>
             <Button variant="contained">
               <VisibilityIcon />
-              <span>Demo</span>
+              <span className="button-text">Demo</span>
             </Button>
           </a>
           <a target="_blank" href={project.code_url || ""}>
             <Button variant="contained">
               <CodeIcon />
-              <span>Code</span>
+              <span className="button-text">Code</span>
             </Button>
           </a>
         </div>
