@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Container } from './styles';
 import Vara from 'vara';
 
-const AboutMe: React.FC = ({pageBound}) => {
+interface IAboutMeProps {
+  pageBound?: number[];
+}
+
+const AboutMe: React.FC<IAboutMeProps> = ({pageBound}: IAboutMeProps) => {
   const width = pageBound[3] * 0.88;
   const height = pageBound[2] * 0.58;
   const top = pageBound[0] + height * 0.05;

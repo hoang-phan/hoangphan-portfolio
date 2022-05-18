@@ -3,14 +3,18 @@ import { Container, Scene } from './styles';
 import API from '../../services/api';
 import { AppContext } from '../../contexts/AppProvider';
 
-const Employment: React.FC = ({pageBound}) => {
+interface IEmploymentProps {
+  pageBound?: number[];
+}
+
+const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) => {
   const [gameState, setGameState] = useState({
     x: 0, y: 0, vx: 6, vy: 0,
     direction: "right", frame: 0,
     activeProjectIndex: -1, prevIndex: -1,
   })
-  const context = useContext(AppContext);
-  const projects = context.projects;
+  const context: any = useContext(AppContext);
+  const projects: any = context.projects;
   const [changingProject, setChangingProject] = useState(false);
   const g = -1.9;
   const { activeProjectIndex, prevIndex } = gameState;
@@ -22,7 +26,7 @@ const Employment: React.FC = ({pageBound}) => {
   const updateGameState = (newData) => setGameState(gameState =>  ({...gameState, ...newData}));
 
   useEffect(() => {
-    const nextCycle = setTimeout(() => {
+    let nextCycle = setTimeout(() => {
       setGameState(({x, y, vx, vy, direction, frame, activeProjectIndex, prevIndex}) => {
         if (activeProjectIndex < 0) {
           vx = Math.max(vx - 0.4, 0);
@@ -163,18 +167,18 @@ const Employment: React.FC = ({pageBound}) => {
           ))
         }
       </div>
-      <Scene autoFocus>
+      <Scene>
         <div className="scroller" />
       </Scene>
       <div style={{display: "none"}}>
         {
-          [...Array(10).keys()].map((i) => <img src={`/Idle__00${i}.png`} key={i} />)
+          Array.from(Array(10).keys()).map((i) => <img src={`/Idle__00${i}.png`} key={i} />)
         }
         {
-          [...Array(10).keys()].map((i) => <img src={`/Run__00${i}.png`} key={i} />)
+          Array.from(Array(10).keys()).map((i) => <img src={`/Run__00${i}.png`} key={i} />)
         }
         {
-          [...Array(10).keys()].map((i) => <img src={`/Jump__00${i}.png`} key={i} />)
+          Array.from(Array(10).keys()).map((i) => <img src={`/Jump__00${i}.png`} key={i} />)
         }
       </div>
     </Container>

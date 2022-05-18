@@ -3,6 +3,15 @@ import BaseObject from './BaseObject';
 import * as THREE from 'three';
 
 class GltfObject extends BaseObject {
+  box: any;
+  centerPoint: any;
+  glbPath: any;
+  options: any;
+  materialMap: any;
+  children: any;
+  lookAtDirection: any;
+  zoom: number;
+
   constructor(scene, glbPath, name, position, scale, rotation, wireframeMaterial, options) {
     super(scene, name, position, scale, rotation, wireframeMaterial);
     this.glbPath = glbPath;

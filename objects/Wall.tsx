@@ -2,6 +2,10 @@ import * as THREE from 'three';
 import BaseObject from './BaseObject';
 
 class Wall extends BaseObject {
+  width: number;
+  height: number;
+  wallMaterial: any;
+
   constructor(scene, id, width, height, position, rotation, wallMaterial, wireframeMaterial) {
     super(scene, `wall${id}`, position, new THREE.Vector3(1, 1, 1), rotation, wireframeMaterial);
     this.width = width;

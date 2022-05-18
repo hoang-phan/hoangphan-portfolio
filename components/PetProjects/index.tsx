@@ -3,10 +3,13 @@ import { Container, ProjectCardWrapper, ProjectDetails } from './styles';
 
 import PetProject from './PetProject';
 import { AppContext } from '../../contexts/AppProvider';
+interface IPetProjectsProps {
+  pageBound?: number[];
+}
 
-const PetProjects: React.FC = ({pageBound}) => {
-  const context = useContext(AppContext);
-  const projects = context.petProjects;
+const PetProjects: React.FC<IPetProjectsProps> = ({pageBound}: IPetProjectsProps) => {
+  const context: any = useContext(AppContext);
+  const projects: any = context.petProjects;
   const [activeProject, setActiveProject] = useState(null);
 
   const projectDetailsClasses = () => {

@@ -1,4 +1,13 @@
 class BaseObject {
+  scene: any;
+  name: any;
+  position: any;
+  scale: any;
+  rotation: any;
+  wireframeMaterial: any;
+  originalScale: any;
+  obj: any;
+
   constructor(scene, name, position, scale, rotation, wireframeMaterial) {
     this.scene = scene;
     this.name = name;
@@ -55,6 +64,22 @@ class BaseObject {
 
   childCount() {
     return 1;
+  }
+
+  buildWireframe() {
+
+  }
+
+  buildObject(obj) {
+    return obj;
+  }
+
+  showOriginalMaterial(index) {
+
+  }
+
+  buildFrameAnimate(fromFrame, toFrame, frame) {
+
   }
 }
 

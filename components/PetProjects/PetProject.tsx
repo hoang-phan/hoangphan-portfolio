@@ -5,7 +5,14 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import CodeIcon from '@material-ui/icons/Code';
 
-const PetProject: React.FC = ({project, hero, active, setActive}) => {
+interface IPetProjectProps {
+  project?: any;
+  hero?: boolean;
+  active?: boolean;
+  setActive?: any;
+}
+
+const PetProject: React.FC<IPetProjectProps> = ({project, hero, active, setActive}: IPetProjectProps) => {
   return (
     <ProjectCard className={`${hero ? "hero" : ""}${active ? " active" : ""}`} style={{backgroundImage: `url(${project.image_url})`}}>
       <div className="backdrop" />
@@ -21,13 +28,13 @@ const PetProject: React.FC = ({project, hero, active, setActive}) => {
             <MoreIcon />
             <span className="button-text">{active ? "Less" : "More"}</span>
           </Button>
-          <a target="_blank" href={project.live_url || ""}>
+          <a target="_blank" rel="noreferrer" href={project.live_url || ""}>
             <Button variant="contained">
               <VisibilityIcon />
               <span className="button-text">Demo</span>
             </Button>
           </a>
-          <a target="_blank" href={project.code_url || ""}>
+          <a target="_blank" rel="noreferrer" href={project.code_url || ""}>
             <Button variant="contained">
               <CodeIcon />
               <span className="button-text">Code</span>

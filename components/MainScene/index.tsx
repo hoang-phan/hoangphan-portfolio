@@ -17,7 +17,7 @@ import TWEEN from 'tween/tween';
 let req = null;
 let frame = 0;
 const caretSize = Math.min(window.innerWidth, window.innerHeight) * 0.15;
-const caretFontSize = window.innerWidth > 640 ? "large" : "normal";
+const caretFontSize = window.innerWidth > 640 ? "large" : "medium";
 const caretLetterSize = caretSize * 0.4;;
 const caretLetterOffset = caretSize * 0.15;;
 
@@ -33,7 +33,7 @@ const MainScene: React.FC = () => {
   );
   const [_controls, setControls] = useState<any>();
   const [objects, setObjects] = useState<any>();
-  const [object2DPositions, setObject2DPositions] = useState({});
+  const [object2DPositions, setObject2DPositions] = useState<any>({});
   const [ready, setReady] = useState(false);
   const [pageOpening, setPageOpening] = useState(null);
   const [pageBound, setPageBound] = useState([0, 0, 0, 0]);
@@ -333,7 +333,7 @@ const MainScene: React.FC = () => {
         }
         {
           pageOpening === "Education" && (
-            <Education pageBound={pageBound} />
+            <Education />
           )
         }
         {

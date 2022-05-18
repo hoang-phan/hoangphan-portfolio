@@ -1,6 +1,6 @@
 import { useState, createContext, useMemo } from 'react';
 
-export const AppContext = createContext();
+export const AppContext = createContext({ projects: [], setProjects: null, petProjects: [], setPetProjects: null });
 
 export const AppProvider = ({ children, initialProjects, initialPetProjects }) => {
   const [projects, setProjects] = useState(initialProjects);
