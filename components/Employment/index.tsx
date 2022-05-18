@@ -108,7 +108,7 @@ const Employment: React.FC = ({pageBound}) => {
   const height = pageBound[2] * 0.69;
   const top = pageBound[0] + height * 0.019;
   const left = pageBound[1] + width * 0.009;
-  const characterWidth = width * 0.2;
+  const characterWidth = width * 0.15;
   const characterHeight = characterWidth * 1.25;
 
   return (

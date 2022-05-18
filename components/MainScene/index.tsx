@@ -16,6 +16,10 @@ import { Desk, Macbook, Imac, Shelf, Board, Tree, Chair, Wall, Floor } from '../
 import TWEEN from 'tween/tween';
 let req = null;
 let frame = 0;
+const caretSize = Math.min(window.innerWidth, window.innerHeight) * 0.15;
+const caretFontSize = window.innerWidth > 640 ? "large" : "normal";
+const caretLetterSize = caretSize * 0.4;;
+const caretLetterOffset = caretSize * 0.15;;
 
 const MainScene: React.FC = () => {
   const refBody = useRef<HTMLDivElement>(null);
@@ -34,9 +38,6 @@ const MainScene: React.FC = () => {
   const [pageOpening, setPageOpening] = useState(null);
   const [pageBound, setPageBound] = useState([0, 0, 0, 0]);
 
-  const caretSize = window.innerWidth > 812 ? 144 : Math.min(window.innerWidth, window.innerHeight) * 0.15;
-  const caretFontSize = window.innerWidth > 640 ? "large" : "normal";
-
   useEffect(() => {
     const { current: container } = refBody;
 
@@ -44,6 +45,8 @@ const MainScene: React.FC = () => {
       const scw = container.clientWidth;
       const sch = container.clientHeight;
       const size = Math.min(scw, sch);
+      const width = scw > sch ? size * 2 : size * 1.4;
+      const height = size * 1.4;
 
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -51,7 +54,7 @@ const MainScene: React.FC = () => {
       });
 
       renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(size * 1.4, size * 1.4);
+      renderer.setSize(width, height);
       renderer.outputEncoding = THREE.sRGBEncoding;
       container.appendChild(renderer.domElement);
       setRenderer(renderer);
@@ -269,7 +272,7 @@ const MainScene: React.FC = () => {
           object2DPositions.board && (
             <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.board.y - caretSize / 2, left: object2DPositions.board.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('board', 'About Me')}>
               <div className="menu-label">
-                <CurvedText text="About Me" objectSize={caretSize * 0.4} />
+                <CurvedText text="About Me" objectSize={caretLetterSize} offset={caretLetterOffset} />
               </div>
               <div className="menu-icon">
                 <FaceIcon fontSize={caretFontSize}/>
@@ -281,7 +284,7 @@ const MainScene: React.FC = () => {
           object2DPositions.shelf && (
             <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.shelf.y - caretSize / 2, left: object2DPositions.shelf.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('shelf', 'Education')}>
               <div className="menu-label">
-                <CurvedText text="Education" objectSize={caretSize * 0.4} />
+                <CurvedText text="Education" objectSize={caretLetterSize} offset={caretLetterOffset} />
               </div>
               <div className="menu-icon">
                 <SchoolIcon fontSize={caretFontSize}/>
@@ -293,7 +296,7 @@ const MainScene: React.FC = () => {
           object2DPositions.macbook && (
             <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.macbook.y - caretSize / 2, left: object2DPositions.macbook.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('macbook', 'Pet Projects')}>
               <div className="menu-label">
-                <CurvedText text="Pet Projects" objectSize={caretSize * 0.4} />
+                <CurvedText text="Pet Projects" objectSize={caretLetterSize} offset={caretLetterOffset} />
               </div>
               <div className="menu-icon">
                 <PetsIcon fontSize={caretFontSize}/>
@@ -305,7 +308,7 @@ const MainScene: React.FC = () => {
           object2DPositions.imac && (
             <div className={`caret ${pageOpening && 'hidden'}`} style={{top: object2DPositions.imac.y - caretSize / 2, left: object2DPositions.imac.x - caretSize / 2, width: caretSize, height: caretSize}} onClick={() => openPage('imac', 'Employment')}>
               <div className="menu-label">
-                <CurvedText text="Employment" objectSize={caretSize * 0.4} />
+                <CurvedText text="Employment" objectSize={caretLetterSize} offset={caretLetterOffset} />
               </div>
               <div className="menu-icon">
                 <WorkIcon fontSize={caretFontSize}/>
@@ -316,7 +319,7 @@ const MainScene: React.FC = () => {
         {
           <div className={`caret ${!pageOpening && 'hidden'}`} style={{width: caretSize, height: caretSize}} onClick={back}>
             <div className="menu-label">
-              <CurvedText text="Back" objectSize={caretSize * 0.4} />
+              <CurvedText text="Back" objectSize={caretLetterSize} offset={caretLetterOffset} />
             </div>
             <div className="menu-icon">
               <ArrowBackIcon fontSize={caretFontSize}/>

@@ -35,7 +35,7 @@ const Container = styled.div`
     background-image: url("lyr1-4.png");
     background-repeat: repeat-x;
     background-size: auto 30%;
-    background-position-y: bottom -10%;
+    background-position-y: 100%;
   }
 
   .lyr2-1 {
