@@ -152,9 +152,8 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
       <div className="milestones">
         <div className="company" style={{width: 5 + width * 0.1, height: 5 + width * 0.1}}>
           {activeCompany &&
-            <img src={activeCompany.logo_url} />
+            <img src={`build/${activeCompany.logo}`} />
           }
-          
         </div>
         {
           projects.map((project, index) => (

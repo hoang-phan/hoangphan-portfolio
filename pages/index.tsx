@@ -28,25 +28,27 @@ const Home: NextPage = () => {
   )
 }
 
-async function saveStaticImage(project) {
-  const imgPaths = project.image_url.split("/");
+async function saveStaticImage(url) {
+  const imgPaths = url.split("/");
   const imgPath = imgPaths[imgPaths.length - 1];
-  const res = await fetch(project.image_url);
+  const res = await fetch(url);
   const buffer = await res.arrayBuffer();
   writeFilePromise("public/build/" + imgPath, Buffer.from(buffer));
 
-  project.image = imgPath;
+  return imgPath;
 }
 
 export async function getStaticProps() {
   const projects = await API.get('projects');
   const petProjects = await API.get('pet_projects');
 
-  for (let project of petProjects) {
-    await saveStaticImage(project);
+  for (let project of projects) {
+    project.company.logo = await saveStaticImage(project.company.logo_url);
   }
 
-  console.log(petProjects);
+  for (let project of petProjects) {
+    project.image = await saveStaticImage(project.image_url);
+  }
 
   return {
     props: { projects, petProjects }
