@@ -30,8 +30,9 @@ const CurvedText: React.FC<ICurvedTextProps> = ({ text, objectSize = 120, spacin
       className="curved-text"
       style={{
         marginBottom: overlap ? -r : 0,
-        width: d + offset * 2,
-        height: r + offset,
+        width: "100%",
+        height: "100%",
+        marginTop: "5%",
       }}
     >
       <svg viewBox={`0 0 ${d + offset * 2} ${r + offset * 2}`}>
