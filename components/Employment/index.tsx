@@ -23,6 +23,13 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
   const activeCompany = activeProject && activeProject.company;
   const prevCompany = prevProject && prevProject.company;
 
+  const width = pageBound[3] * 0.94;
+  const height = pageBound[2] * 0.69;
+  const top = pageBound[0] + height * 0.019;
+  const left = pageBound[1] + width * 0.009;
+  const characterWidth = width * 0.15;
+  const characterHeight = characterWidth * 1.25;
+
   const updateGameState = (newData) => setGameState(gameState =>  ({...gameState, ...newData}));
 
   useEffect(() => {
@@ -78,9 +85,9 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
 
   const getCharacterBottom = () => {
     if (gameState.activeProjectIndex < 1) {
-      return gameState.y + 130;
+      return gameState.y + height * 0.25;
     }
-    return gameState.y + 60;
+    return gameState.y + height * 0.1;
   }
 
   const handleProjectChange = (index) => {
@@ -108,13 +115,6 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
     }, 1100);
   }
 
-  const width = pageBound[3] * 0.94;
-  const height = pageBound[2] * 0.69;
-  const top = pageBound[0] + height * 0.019;
-  const left = pageBound[1] + width * 0.009;
-  const characterWidth = width * 0.15;
-  const characterHeight = characterWidth * 1.25;
-
   return (
     <Container style={{top, left, width, height}}>
       {gameState.activeProjectIndex < 1 &&
@@ -133,7 +133,7 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
           <div className="scene1 lyr2-4" style={{backgroundPositionX: Math.min(width * 0.15 - gameState.x, 0)}}/>
         </div>
       }
-      <div className="character" style={{bottom: getCharacterBottom() * width / 800, left: Math.min(gameState.x, width * 0.15), width: characterWidth, height: characterHeight}}>
+      <div className="character" style={{bottom: getCharacterBottom(), left: Math.min(gameState.x, width * 0.15), width: characterWidth, height: characterHeight}}>
         <img className={gameState.direction} src={`/${getCharacterState()}__00${gameState.frame}.png`}/>
       </div>
       {activeProject &&
@@ -150,7 +150,7 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
       }
 
       <div className="milestones">
-        <div className="company" style={{width: width * 0.12, height: width * 0.12}}>
+        <div className="company" style={{width: 5 + width * 0.1, height: 5 + width * 0.1}}>
           {activeCompany &&
             <img src={activeCompany.logo_url} />
           }
@@ -162,7 +162,7 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
               className={`project ${activeProjectIndex === index ? "active" : ""}`}
               key={project.id}
               onClick={() => handleProjectChange(index)}
-              style={{width: width * 0.08, height: width * 0.08}}
+              style={{width: 5 + width * 0.06, height: 5 + width * 0.06}}
             />
           ))
         }

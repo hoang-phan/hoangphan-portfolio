@@ -39,7 +39,7 @@ const BodyModel = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 640px) {
+  @media (orientation: portrait) {
     height: auto;
     top: 120px;
     width: 129.5%;
@@ -88,14 +88,26 @@ const Hero = styled.div`
     letter-spacing: 5px;
   }
 
-  @media (max-width: 640px) {
+  @media (orientation: portrait) {
     top: 10px;
     left: 0;
     max-width: 100%;
     width: 100%;
     height: 100px;
     text-align: center;
+  }
 
+  @media (max-width: 640px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (max-height: 480px) {
     h1 {
       font-size: 2rem;
     }
@@ -170,6 +182,10 @@ const Menu = styled.div`
           left: 30%;
         }
       }
+    }
+
+    @media (orientation: portrait) {
+      top: 1%;
     }
   }
 `

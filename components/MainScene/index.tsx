@@ -45,8 +45,20 @@ const MainScene: React.FC = () => {
       const scw = container.clientWidth;
       const sch = container.clientHeight;
       const size = Math.min(scw, sch);
-      const width = scw > sch ? size * 2 : size * 1.4;
-      const height = size * 1.4;
+
+      let width = size;
+      let height = size;
+      let scaleFactor = 1;
+
+      if (scw > 1.5 * sch) {
+        width = size * 2;
+        height = 1.4 * size;
+      } else if (sch > 1.2 * scw) {
+        width = 1.4 * size;
+        height = 1.4 * size;
+      } else {
+        scaleFactor = 1.4;
+      }
 
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -91,10 +103,10 @@ const MainScene: React.FC = () => {
 
       const objects = {
         desk: new Desk(scene, new THREE.Vector3(-0.5,-1.59,0),new THREE.Vector3(0,-Math.PI/2,0), wireframeMaterial),
-        macbook: new Macbook(scene, new THREE.Vector3(-1.4,0,0),new THREE.Vector3(0,1.1 * Math.PI,0), wireframeMaterial, new THREE.Vector3(0.5, 0, 1.5), 8),
-        imac: new Imac(scene, new THREE.Vector3(0.5,-0.035,-0.1),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0, 0, 1.5), 4.3),
-        shelf: new Shelf(scene, new THREE.Vector3(-2,-1.55,-2.45),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0.1, 0.1, 1.5), 3.5),
-        board: new Board(scene, new THREE.Vector3(2.9,-1.57,1),new THREE.Vector3(0,-Math.PI / 2,0), wireframeMaterial, new THREE.Vector3(-1.5, 0, 0), 2.5),
+        macbook: new Macbook(scene, new THREE.Vector3(-1.4,0,0),new THREE.Vector3(0,1.1 * Math.PI,0), wireframeMaterial, new THREE.Vector3(0.5, 0, 1.5), 8 * scaleFactor),
+        imac: new Imac(scene, new THREE.Vector3(0.5,-0.035,-0.1),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0, 0, 1.5), 4.3 * scaleFactor),
+        shelf: new Shelf(scene, new THREE.Vector3(-2,-1.55,-2.45),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0.1, 0.1, 1.5), 3.5 * scaleFactor),
+        board: new Board(scene, new THREE.Vector3(2.9,-1.57,1),new THREE.Vector3(0,-Math.PI / 2,0), wireframeMaterial, new THREE.Vector3(-1.5, 0, 0), 2.5 * scaleFactor),
         tree: new Tree(scene, new THREE.Vector3(1,-1.57,-2.16),new THREE.Vector3(0,Math.PI / 2,0), wireframeMaterial),
         chair: new Chair(scene, new THREE.Vector3(-0.5,-1.52,1.8),new THREE.Vector3(0,-2 * Math.PI / 3,0), wireframeMaterial),
         wall1: new Wall(scene, '1', 6, 4, new THREE.Vector3(0,0.46,-3), new THREE.Vector3(0,0,0), wallMaterial, wireframeMaterial),

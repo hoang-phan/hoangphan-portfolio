@@ -12,6 +12,8 @@
 /.next/
 
 # production
+/public/build/*
+!/public/build/.keep
 /build
 
 # misc

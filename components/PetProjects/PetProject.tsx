@@ -14,7 +14,7 @@ interface IPetProjectProps {
 
 const PetProject: React.FC<IPetProjectProps> = ({project, hero, active, setActive}: IPetProjectProps) => {
   return (
-    <ProjectCard className={`${hero ? "hero" : ""}${active ? " active" : ""}`} style={{backgroundImage: `url(${project.image_url})`}}>
+    <ProjectCard className={`${hero ? "hero" : ""}${active ? " active" : ""}`} style={{backgroundImage: `url("build/${project.image})"`}}>
       <div className="backdrop" />
       <div className="content">
         <div className="project-name">{project.name}</div>
