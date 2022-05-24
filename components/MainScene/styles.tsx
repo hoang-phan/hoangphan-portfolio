@@ -6,116 +6,21 @@ const Container = styled.div`
   height: 100vh;
   color: #4f4338;
   text-align: center;
-  background-color: #d0dbe6;
-`
-
-const Header = styled.div`
-  position: absolute;
-  top: 2rem;
-  left: 0;
-  z-index: 999;
-  width: 100%;
-  font-size: 2rem;
-
-  @media (max-width: 640px) {
-    font-size: 1.5rem;
-  }
-
-  h1 {
-    font-size: inherit;
-  }
-
-  span {
-    background: linear-gradient(orange, red);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+  background: #d0dbe6;
 `
 
 const BodyModel = styled.div`
   position: absolute;
+  top: 0;
   bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  @media (orientation: portrait) {
-    height: auto;
-    top: 120px;
-    width: 129.5%;
-    text-align: center;
-  }
-
   left: -15%;
   width: 100%;
   height: 100%;
-
-  cursor: pointer;
-  background-color: transparent;
-`
-
-const Hero = styled.div`
-  position: absolute;
-  bottom: 0;
-
-  right: 0;
-  width: 30%;
-  height: 100%;
-  max-width: 400px;
-
-  cursor: pointer;
-  background-color: transparent;
-
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  text-align: right;
-
-  h1, h2 {
-    color: #4f4338;
-    padding: 10px;
-    margin: 0;
-  }
-
-  h1 {
-    font-size: 4rem;
-    letter-spacing: 1px;
-    border-bottom: 3px solid #4f4338;
-  }
-
-  h2 {
-    font-size: 2rem;
-    letter-spacing: 5px;
-  }
-
-  @media (orientation: portrait) {
-    top: 10px;
-    left: 0;
-    max-width: 100%;
-    width: 100%;
-    height: 100px;
-    text-align: center;
-  }
-
-  @media (max-width: 640px) {
-    h1 {
-      font-size: 2rem;
-    }
-
-    h2 {
-      font-size: 1.75rem;
-    }
-  }
-
-  @media (max-height: 480px) {
-    h1 {
-      font-size: 2rem;
-    }
-
-    h2 {
-      font-size: 1.75rem;
-    }
-  }
+  cursor: pointer;
+  background-color: transparent;
 `
 
 const Menu = styled.div`
@@ -190,4 +95,4 @@ const Menu = styled.div`
   }
 `
 
-export { Container, Header, BodyModel, Hero, Menu }
+export { Container, BodyModel, Menu }
