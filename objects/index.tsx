@@ -7,5 +7,6 @@ import Tree from './Tree';
 import Chair from './Chair';
 import Wall from './Wall';
 import Floor from './Floor';
+import Mailbox from './Mailbox';
 
-export { Desk, Macbook, Imac, Shelf, Board, Tree, Chair, Wall, Floor };
+export { Desk, Macbook, Imac, Shelf, Board, Mailbox, Tree, Chair, Wall, Floor };

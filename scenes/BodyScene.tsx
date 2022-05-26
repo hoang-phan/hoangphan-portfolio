@@ -26,24 +26,21 @@ export default class BodyScene {
 
     const wallMaterial = new THREE.MeshBasicMaterial( {map: wallTexture} );
     const floorMaterial = new THREE.MeshBasicMaterial( {color: 0x111111} );
-    const redMaterial = new THREE.MeshBasicMaterial( {color: 0xFF0000} );
-    const greenMaterial = new THREE.MeshBasicMaterial( {color: 0x00FF00} );
-    const wireframeMaterial = new THREE.MeshLambertMaterial( {color: 0xdddddd} );
 
     this.loaded = false;
     let objectsLoaded = {};
 
     this.objects = {
-      desk: new Desk(this.scene, new THREE.Vector3(-0.5,-1.59,0),new THREE.Vector3(0,-Math.PI/2,0), wireframeMaterial),
-      macbook: new Macbook(this.scene, new THREE.Vector3(-1.4,0,0),new THREE.Vector3(0,1.1 * Math.PI,0), wireframeMaterial, new THREE.Vector3(0.5, 0, 1.5), 8),
-      imac: new Imac(this.scene, new THREE.Vector3(0.5,-0.035,-0.1),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0, 0, 1.5), 4.3),
-      shelf: new Shelf(this.scene, new THREE.Vector3(-2,-1.55,-2.45),new THREE.Vector3(0,0,0), wireframeMaterial, new THREE.Vector3(0.1, 0.1, 1.5), 3.5),
-      board: new Board(this.scene, new THREE.Vector3(2.9,-1.57,1),new THREE.Vector3(0,-Math.PI / 2,0), wireframeMaterial, new THREE.Vector3(-1.5, 0, 0), 2.5),
-      tree: new Tree(this.scene, new THREE.Vector3(1,-1.57,-2.16),new THREE.Vector3(0,Math.PI / 2,0), wireframeMaterial),
-      chair: new Chair(this.scene, new THREE.Vector3(-0.5,-1.52,1.8),new THREE.Vector3(0,-2 * Math.PI / 3,0), wireframeMaterial),
-      wall1: new Wall(this.scene, '1', 6, 4, new THREE.Vector3(0,0.46,-3), new THREE.Vector3(0,0,0), wallMaterial, wireframeMaterial),
-      wall2: new Wall(this.scene, '2', 6, 4, new THREE.Vector3(2.98,0.46,0), new THREE.Vector3(0,Math.PI / 2,0), wallMaterial, wireframeMaterial),
-      floor: new Floor(this.scene, '3', 6.05, 6.05, new THREE.Vector3(0,-1.64,0), new THREE.Vector3(-Math.PI / 2,0,0), floorMaterial, wireframeMaterial),
+      desk: new Desk(this.scene, new THREE.Vector3(-0.5,-1.59,0),new THREE.Vector3(0,-Math.PI/2,0)),
+      macbook: new Macbook(this.scene, new THREE.Vector3(-1.4,0,0),new THREE.Vector3(0,1.1 * Math.PI,0), new THREE.Vector3(0.5, 0, 1.5), 8),
+      imac: new Imac(this.scene, new THREE.Vector3(0.5,-0.035,-0.1),new THREE.Vector3(0,0,0), new THREE.Vector3(0, 0, 1.5), 4.3),
+      shelf: new Shelf(this.scene, new THREE.Vector3(-2,-1.55,-2.45),new THREE.Vector3(0,0,0), new THREE.Vector3(0.1, 0.1, 1.5), 3.5),
+      board: new Board(this.scene, new THREE.Vector3(2.9,-1.57,1),new THREE.Vector3(0,-Math.PI / 2,0), new THREE.Vector3(-1.5, 0, 0), 2.5),
+      tree: new Tree(this.scene, new THREE.Vector3(1,-1.57,-2.16),new THREE.Vector3(0,Math.PI / 2,0)),
+      chair: new Chair(this.scene, new THREE.Vector3(-0.5,-1.52,1.8),new THREE.Vector3(0,-2 * Math.PI / 3,0)),
+      wall1: new Wall(this.scene, '1', 6, 4, new THREE.Vector3(0,0.46,-3), new THREE.Vector3(0,0,0), wallMaterial),
+      wall2: new Wall(this.scene, '2', 6, 4, new THREE.Vector3(2.98,0.46,0), new THREE.Vector3(0,Math.PI / 2,0), wallMaterial),
+      floor: new Floor(this.scene, '3', 6.05, 6.05, new THREE.Vector3(0,-1.64,0), new THREE.Vector3(-Math.PI / 2,0,0), floorMaterial),
     };
 
     Object.keys(this.objects).forEach((key) => {
@@ -58,17 +55,19 @@ export default class BodyScene {
   }
 
   setupCamera = () => {
-    const scale = 4;
+    const scale = 3;
+
+    let whRatio = Math.max(innerWidth * 0.75 / innerHeight, 1.2); 
+    if (innerWidth < innerHeight) {
+      whRatio = 1.5;
+    }
 
     this.target = new THREE.Vector3(0, 0, 0);
-    this.camera = new THREE.OrthographicCamera(2 * scale, -2 * scale, scale * 1.5, -scale, 0.01, 50000);
+    this.camera = new THREE.OrthographicCamera(2 / whRatio * scale, -2 / whRatio * scale, scale, -scale, 0.01, 50000);
     this.camera.position.set(-5, 4, 5);
     this.camera.lookAt(this.target);
     const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
     const material = new THREE.MeshBasicMaterial({color: "green"});
-    this.mesh = new THREE.Mesh(geometry, material);
-    this.mesh.position.copy(this.camera.position);
-    this.scene.add(this.mesh);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target = this.target;
@@ -82,8 +81,13 @@ export default class BodyScene {
     vector.set( position.x, position.y, position.z );
     vector.project(this.camera);
 
-    vector.x = Math.round( (   vector.x + 1 ) * canvas.width * 0.7 / 2 / devicePixelRatio + canvas.getBoundingClientRect().left);
-    vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 2 / devicePixelRatio + canvas.getBoundingClientRect().top);
+    const width = window.innerWidth >= window.innerHeight ? canvas.width * 0.7 : canvas.width;
+    const height = window.innerWidth >= window.innerHeight ? canvas.height : canvas.height * 0.8;
+    const offsetWidth = 0;
+    const offsetHeight = window.innerWidth >= window.innerHeight ? 0 : canvas.height * 0.2;
+
+    vector.x = Math.round( (   vector.x + 1 ) * width / 2 / devicePixelRatio + offsetWidth / devicePixelRatio);
+    vector.y = Math.round( ( - vector.y + 1 ) * height / 2 / devicePixelRatio + offsetHeight / devicePixelRatio);
     vector.z = 0;
     return vector;
   }
@@ -108,12 +112,6 @@ export default class BodyScene {
     this.controls.enabled = false;
 
     const that = this;
-
-    const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-    const material = new THREE.MeshBasicMaterial({color: "red"});
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.copy(lookAtPos);
-    this.scene.add(mesh);
 
     new TWEEN.Tween(this.camera.position)
       .to({
@@ -178,13 +176,14 @@ export default class BodyScene {
       TWEEN.update();
     }
 
-    if (this.mesh) {
-    this.mesh.position.copy(this.camera.position)
-      
+    if (window.innerWidth >= window.innerHeight) {
+      this.renderer.setViewport(0, 0, window.innerWidth * 0.7, window.innerHeight);
+      this.renderer.setScissor(0, 0, window.innerWidth * 0.7, window.innerHeight);
+    } else {
+      this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight * 0.8);
+      this.renderer.setScissor(0, 0, window.innerWidth, window.innerHeight * 0.8);
     }
-    // this.renderer.setViewport(0, 0, window.innerWidth * 0.7, window.innerHeight);
-    // this.renderer.setScissor(0, 0, window.innerWidth * 0.7, window.innerHeight);
-    // this.renderer.setScissorTest(true);
+    this.renderer.setScissorTest(true);
     this.renderer.render(this.scene, this.camera);
   }
 }

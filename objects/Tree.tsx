@@ -2,7 +2,7 @@ import GltfObject from './GltfObject';
 import * as THREE from 'three';
 
 class Tree extends GltfObject {
-  constructor(scene, position, rotation, wireframeMaterial) {
+  constructor(scene, position, rotation) {
     super(
       scene,
       'tree.glb',
@@ -10,7 +10,6 @@ class Tree extends GltfObject {
       position,
       new THREE.Vector3(0.03, 0.03, 0.03),
       rotation,
-      wireframeMaterial,
       {}
     );
   }

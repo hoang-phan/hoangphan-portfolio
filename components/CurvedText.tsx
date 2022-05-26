@@ -33,6 +33,7 @@ const CurvedText: React.FC<ICurvedTextProps> = ({ text, objectSize = 120, spacin
         width: "100%",
         height: "100%",
         marginTop: "5%",
+        userSelect: "none",
       }}
     >
       <svg viewBox={`0 0 ${d + offset * 2} ${r + offset * 2}`}>

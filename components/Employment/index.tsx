@@ -138,7 +138,7 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
       </div>
       {activeProject &&
         <div className={`project-description current ${changingProject ? "transitioning" : ""}`}>
-          <h3>{activeCompany.name} ({activeCompany.from_year} - {activeCompany.to_year})</h3>
+          <h3>{activeCompany.name}</h3>
           <h4>{activeProject.name} ({activeProject.from_year} - {activeProject.to_year})</h4>
           <h4 className="section-title">Summary</h4>
           <p>{activeProject.summary}</p>

@@ -2,7 +2,7 @@ import GltfObject from './GltfObject';
 import * as THREE from 'three';
 
 class Chair extends GltfObject {
-  constructor(scene, position, rotation, wireframeMaterial) {
+  constructor(scene, position, rotation) {
     super(
       scene,
       'chair.glb',
@@ -10,7 +10,6 @@ class Chair extends GltfObject {
       position,
       new THREE.Vector3(0.7, 0.7, 0.7),
       rotation,
-      wireframeMaterial,
       {}
     );
   }

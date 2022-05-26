@@ -13,7 +13,7 @@ const BodyModel = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -15%;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
@@ -26,7 +26,7 @@ const BodyModel = styled.div`
 const Menu = styled.div`
   .caret {
     position: fixed;
-    z-index: 99;
+    z-index: 999;
     transition: left 0.3s ease, top 0.3s ease, opacity 0.3s ease;
     top: 100px;
     left: calc(100% - 200px);
@@ -95,4 +95,78 @@ const Menu = styled.div`
   }
 `
 
-export { Container, BodyModel, Menu }
+const Hero = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30%;
+  height: 100%;
+  text-align: center;  
+
+  h1 {
+    text-align: left;
+    width: 100%;
+    font-size: 3rem;
+    position: absolute;
+    top: 50%;
+    color: #333;
+    letter-spacing: 100px;
+    right: -800%;
+    overflow: hidden;
+    white-space: nowrap;
+    transform: skew(15deg, 0);
+    transition: letter-spacing 2s, right 1s, transform 0.5s ease 1s;
+    cursor: pointer;
+    user-select: none;
+
+    &.ready {
+      right: 0;
+      transform: skew(0, 0);
+      letter-spacing: 2px;
+    }
+
+    .title-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      color: #3f51b5;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  @media (orientation: portrait) {
+    top: 0;
+    width: 100%;
+    height: 30%;
+
+    h1 {
+      top: 35%;
+      font-size: 2rem;
+      text-align: center;
+
+      .title-overlay {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-height: 600px) {
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  @media (max-height: 400px) {
+    h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+  }
+
+`
+
+export { Container, BodyModel, Menu, Hero }

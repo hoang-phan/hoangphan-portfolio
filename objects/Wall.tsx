@@ -6,8 +6,8 @@ class Wall extends BaseObject {
   height: number;
   wallMaterial: any;
 
-  constructor(scene, id, width, height, position, rotation, wallMaterial, wireframeMaterial) {
-    super(scene, `wall${id}`, position, new THREE.Vector3(1, 1, 1), rotation, wireframeMaterial);
+  constructor(scene, id, width, height, position, rotation, wallMaterial) {
+    super(scene, `wall${id}`, position, new THREE.Vector3(1, 1, 1), rotation);
     this.width = width;
     this.height = height;
     this.wallMaterial = wallMaterial;
@@ -26,12 +26,13 @@ class Wall extends BaseObject {
   }
 
   buildWireframe() {
-    this.obj.material = this.wireframeMaterial;
+    this.obj.material = this.wallMaterial;
+    this.obj.material.wireframe = true;
     this.obj.scale.x = 0;
   }
 
   showOriginalMaterial() {
-    this.obj.material = this.wallMaterial;
+    this.obj.material.wireframe = false;
   }
 
   buildFrameAnimate(fromFrame, toFrame, frame) {

@@ -4,25 +4,21 @@ class BaseObject {
   position: any;
   scale: any;
   rotation: any;
-  wireframeMaterial: any;
   originalScale: any;
   obj: any;
 
-  constructor(scene, name, position, scale, rotation, wireframeMaterial) {
+  constructor(scene, name, position, scale, rotation) {
     this.scene = scene;
     this.name = name;
     this.position = position;
     this.scale = scale;
     this.rotation = rotation;
-    this.wireframeMaterial = wireframeMaterial;
     this.originalScale = this.scale;
   }
 
   loadObjects(obj) {
     this.obj = this.loadObject(obj);
-    if (this.wireframeMaterial) {
-      this.buildWireframe();
-    }
+    this.buildWireframe();
   }
 
   loadObject(obj) {

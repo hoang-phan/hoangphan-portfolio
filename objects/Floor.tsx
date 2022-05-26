@@ -2,7 +2,7 @@ import Wall from './Wall';
 
 class Floor extends Wall {
   buildWireframe() {
-    this.obj.material = this.wireframeMaterial;
+    this.obj.material.wireframe = true;
     this.obj.scale.z = 0;
   }
 

@@ -1,8 +1,8 @@
 import GltfObject from './GltfObject';
 
 class MenuTarget extends GltfObject {
-  constructor(scene, glbPath, name, position, scale, rotation, wireframeMaterial, lookAtDirection, zoom) {
-    super(scene, glbPath, name, position, scale, rotation, wireframeMaterial, {});
+  constructor(scene, glbPath, name, position, scale, rotation, lookAtDirection, zoom) {
+    super(scene, glbPath, name, position, scale, rotation, {});
     this.lookAtDirection = lookAtDirection;
     this.zoom = zoom;
   }

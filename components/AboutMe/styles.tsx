@@ -8,6 +8,25 @@ const Container = styled.div`
   bottom: 35px;
   color: #red;
   z-index: 100;
+  display: flex;
+  flex-direction: column;
+
+  #intro {
+    height: 50%;
+  }
+
+  #social-links {
+    height: 50%;
+    display: flex;
+
+    .social-link {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 `;
 
 export { Container };

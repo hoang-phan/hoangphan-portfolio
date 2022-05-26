@@ -12,8 +12,8 @@ class GltfObject extends BaseObject {
   lookAtDirection: any;
   zoom: number;
 
-  constructor(scene, glbPath, name, position, scale, rotation, wireframeMaterial, options) {
-    super(scene, name, position, scale, rotation, wireframeMaterial);
+  constructor(scene, glbPath, name, position, scale, rotation, options) {
+    super(scene, name, position, scale, rotation);
     this.glbPath = glbPath;
     this.options = options;
     this.materialMap = {};
@@ -62,15 +62,14 @@ class GltfObject extends BaseObject {
     this.obj.traverse((child) => {
       if (child.material) {
         this.children.push(child);
-        that.materialMap[child.uuid] = child.material;
-        child.material = that.wireframeMaterial;
+        child.material.wireframe = true;
       }
     });
   }
 
   showOriginalMaterial(childIndex) {
     const child = this.children[childIndex];
-    child.material = this.materialMap[child.uuid];
+    child.material.wireframe = false;
   }
 
   buildFrameAnimate(fromFrame, toFrame, frame) {

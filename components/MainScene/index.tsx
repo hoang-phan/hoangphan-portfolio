@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import Button from '@material-ui/core/Button';
 import WorkIcon from '@material-ui/icons/Work';
 import SchoolIcon from '@material-ui/icons/School';
 import PetsIcon from '@material-ui/icons/Pets';
 import FaceIcon from '@material-ui/icons/Face';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import EmailIcon from '@material-ui/icons/Email';
 
 import PageHeroScene from '../../scenes/PageHeroScene';
 import BodyScene from '../../scenes/BodyScene';
@@ -16,7 +18,8 @@ import Education from '../Education';
 import Employment from '../Employment';
 import PetProjects from '../PetProjects';
 import AboutMe from '../AboutMe';
-import { Container, BodyModel, Menu } from './styles'
+import ContactMe from '../ContactMe';
+import { Container, BodyModel, Menu, Hero } from './styles'
 
 let req = null;
 let frame = 0;
@@ -24,11 +27,12 @@ const caretSize = Math.min(window.innerWidth, window.innerHeight) * 0.15;
 const caretFontSize = window.innerWidth > 640 ? "large" : "medium";
 const caretLetterSize = caretSize * 0.4;;
 const caretLetterOffset = caretSize * 0.15;
-// let pageHeroScene = null;
+let pageHeroScene = null;
 let bodyScene = null;
 
 const MainScene: React.FC = () => {
   const refBody = useRef<HTMLDivElement>(null);
+  const titleRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false)
   const [renderer, setRenderer] = useState<any>()
   const [scene] = useState(new THREE.Scene());
@@ -58,11 +62,19 @@ const MainScene: React.FC = () => {
       container.appendChild(renderer.domElement);
       setRenderer(renderer);
 
-      // pageHeroScene = new PageHeroScene(renderer, scene);
+      pageHeroScene = new PageHeroScene(renderer, scene);
       bodyScene = new BodyScene(renderer, scene);
       bodyScene.onLoad = () => {
         setBodySceneLoaded(true);
       }
+
+      titleRef.current.addEventListener("mousemove", (e) => {
+        titleRef.current.querySelector(".title-overlay").style.width = `${e.pageX - titleRef.current.getBoundingClientRect().left}px`;
+      });
+
+      titleRef.current.addEventListener("mouseleave", (e) => {
+        titleRef.current.querySelector(".title-overlay").style.width = 0;
+      });
     }
 
     return () => {
@@ -88,9 +100,9 @@ const MainScene: React.FC = () => {
       bodyScene.render(frame);
     }
 
-    // if (pageHeroScene) {
-    //   pageHeroScene.render();
-    // }
+    if (pageHeroScene) {
+      pageHeroScene.render();
+    }
 
     req = requestAnimationFrame(animate);
   }
@@ -116,7 +128,7 @@ const MainScene: React.FC = () => {
   }, [bodySceneLoaded, pageOpening]);
 
   useEffect(() => {
-    if (ready) {
+    if (ready && bodyScene) {
       bodyScene.controls.addEventListener('end', () => {
         bodyScene.controls.update();
         moveMenu();
@@ -186,10 +198,19 @@ const MainScene: React.FC = () => {
             <Education />
           )
         }
-
+        {
+          pageOpening === "Employment" && (
+            <Employment pageBound={pageBound} />
+          )
+        }
         {
           pageOpening === "Pet Projects" && (
             <PetProjects pageBound={pageBound} />
+          )
+        }
+        {
+          pageOpening === "Contact Me" && (
+            <ContactMe />
           )
         }
       </Menu>
@@ -198,6 +219,17 @@ const MainScene: React.FC = () => {
           loading && <p>Loading...</p>
         }
       </BodyModel>
+      <Hero>
+        {pageOpening != "Contact Me" && (
+          <Button variant="contained" color="primary" startIcon={<EmailIcon />} onClick={() => setPageOpening("Contact Me")}>
+            Contact Me
+          </Button>
+        )}
+        <h1 className={bodySceneLoaded ? "ready" : ""} ref={titleRef}>
+          <span className="title">{pageOpening ? pageOpening : "Web Developer"}</span>
+          <span className="title-overlay">{pageOpening ? pageOpening : "Web Developer"}</span>
+        </h1>
+      </Hero>
     </Container>
   )
 }

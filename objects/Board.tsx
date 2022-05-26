@@ -2,7 +2,7 @@ import MenuTarget from './MenuTarget';
 import * as THREE from 'three';
 
 class Board extends MenuTarget {
-  constructor(scene, position, rotation, wireframeMaterial, lookAtDirection, zoom) {
+  constructor(scene, position, rotation, lookAtDirection, zoom) {
     super(
       scene,
       'board.glb',
@@ -10,7 +10,6 @@ class Board extends MenuTarget {
       position,
       new THREE.Vector3(1.4, 1.4, 1.4),
       rotation,
-      wireframeMaterial,
       lookAtDirection,
       zoom,
     );
