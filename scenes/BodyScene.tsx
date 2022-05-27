@@ -5,6 +5,15 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Desk, Macbook, Imac, Shelf, Board, Tree, Chair, Wall, Floor } from '../objects';
 
 export default class BodyScene {
+  renderer: any;
+  scene: any;
+  loaded: boolean;
+  objects: object;
+  target: any;
+  camera: any;
+  controls: any;
+  onLoad: any;
+
   constructor(renderer, scene) {
     this.renderer = renderer;
     this.scene = scene;
@@ -57,11 +66,14 @@ export default class BodyScene {
   setupCamera = () => {
     const scale = 3;
 
-    let whRatio = Math.max(innerWidth * 0.75 / innerHeight, 1.2); 
+    let whRatio = Math.max(innerWidth * 0.75 / innerHeight, 1.2);
+    whRatio = Math.min(whRatio, 1.4);
+
     if (innerWidth < innerHeight) {
       whRatio = 1.5;
     }
 
+    console.log(whRatio);
     this.target = new THREE.Vector3(0, 0, 0);
     this.camera = new THREE.OrthographicCamera(2 / whRatio * scale, -2 / whRatio * scale, scale, -scale, 0.01, 50000);
     this.camera.position.set(-5, 4, 5);

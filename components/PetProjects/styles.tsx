@@ -105,7 +105,7 @@ const ProjectCard = styled.div`
     }
   }
 
-  @media (pointer:none), (pointer:coarse) {
+  @media (pointer:none), (pointer:coarse), (-webkit-device-pixel-ratio: 4) {
     .backdrop {
       opacity: 1 !important;
     }
@@ -131,6 +131,20 @@ const ProjectCard = styled.div`
           span.button-text {
             display: none;
           }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1280px) {
+    .content {
+      .project-name {
+        font-size: 2em;
+      }
+
+      .actions {
+        button {
+          padding: 2px;
         }
       }
     }
@@ -164,6 +178,35 @@ const ProjectCard = styled.div`
     }
   }
 
+
+  @media (max-height: 480px) {
+    .content {
+      .project-name {
+        font-size: 1em;
+      }
+
+      .tags {
+        margin-top: 0.5em;
+        margin-bottom: 0.2em;
+
+        .tag {
+          font-size: 0.5em;
+        }
+      }
+
+      .actions {
+        button {
+          margin: 0.5em 0.2em;
+          padding: 2px;
+          min-width: 40px;
+          width: 40px;
+          span.button-text {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 `;
 
 const ProjectDetails = styled.div`
@@ -207,6 +250,13 @@ const ProjectDetails = styled.div`
 
   @media (max-width: 640px) {
     font-size: 0.75rem;
+  }
+
+  @media (max-height: 480px) {
+    font-size: 0.75rem;
+    h4 {
+      display: none;
+    }
   }
 `;
 

@@ -90,7 +90,7 @@ const AboutMe: React.FC<IAboutMeProps> = ({pageBound}: IAboutMeProps) => {
       <div id="intro" />
       <div id="social-links">
         {profiles.map((profile, index) => (
-          <a key={profile.htmlId} id={profile.htmlId} className="social-link" href={profile.href} target="_blank">
+          <a key={profile.htmlId} id={profile.htmlId} className="social-link" href={profile.href} target="_blank" rel="noreferrer">
             <SvgDrawable size={height * 0.2} position={index} paths={profile.svgPath} animationDelay={9} />
           </a>
         ))}

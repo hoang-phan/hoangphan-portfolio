@@ -55,6 +55,10 @@ const Container = styled.div`
     }
   }
 
+  img {
+    max-width: 100%;
+  }
+
   @media (orientation: portrait) {
     width: 100%;
     left: 0;

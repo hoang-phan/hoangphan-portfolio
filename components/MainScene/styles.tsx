@@ -153,15 +153,26 @@ const Hero = styled.div`
     }
   }
 
+  @media (max-width: 1280px) {
+    h1.ready {
+      font-size: 2rem;
+      letter-spacing: 1px;
+
+      .title-overlay {
+        letter-spacing: 1px;
+      }
+    }
+  }
+
   @media (max-height: 600px) {
-    h1 {
+    h1.ready {
       font-size: 2rem;
       letter-spacing: 1px;
     }
   }
 
-  @media (max-height: 400px) {
-    h1 {
+  @media (max-height: 480px) {
+    h1.ready {
       font-size: 1.5rem;
       letter-spacing: 1px;
     }

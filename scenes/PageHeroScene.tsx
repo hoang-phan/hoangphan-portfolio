@@ -6,6 +6,14 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import * as CANNON from 'cannon';
 
 export default class PageHeroScene {
+  renderer: any;
+  scene: any;
+  world: any;
+  letters: any;
+  camera: any;
+  avatarMesh: any;
+  avatarBody: any;
+
   constructor(renderer, scene) {
     this.renderer = renderer;
     this.scene = scene;

@@ -1,11 +1,25 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, createRef } from 'react';
 import styled, {keyframes, css} from 'styled-components';
 
-const SvgDrawable: React.FC = ({position, paths, animationDelay, size}) => {
+interface ISvgDrawableProps {
+  position?: number;
+  paths?: string[];
+  animationDelay?: number;
+  size?: number;
+}
+
+interface IPathProps {
+  ref: any;
+  index: number;
+  strokeLength: any;
+}
+
+const SvgDrawable: React.FC<ISvgDrawableProps> = ({position, paths, animationDelay, size}) => {
   const pathLength = paths.length;
-  const refs = paths.map(path => useRef(null));
+  const refs = useRef(paths.map(createRef));
   const [strokeLengths, setStrokeLengths] = useState([]);
-  const Path = styled.path`
+
+  const Path = styled.path<IPathProps>`
     @keyframes draw-${position}-${props => props.index} {
       0% { stroke-dashoffset: ${props => props.strokeLength}px; opacity: 0 }
       100% { stroke-dashoffset: 0; opacity: 1 }
@@ -18,14 +32,19 @@ const SvgDrawable: React.FC = ({position, paths, animationDelay, size}) => {
     opacity: 0;
   `;
 
+  const getLength = (el) => el.getTotalLength();
+
   useEffect(() => {
-    setStrokeLengths(refs.map(ref => ref.current.getTotalLength()));
+    setStrokeLengths(
+      refs.current.map(ref => getLength(ref.current))
+    );
   }, []);
 
   return (
     <svg width={size} height={size} viewBox="0 0 200 200">
       {paths.map((path, index) => (
-        <Path ref={refs[index]}
+        <Path
+          ref={refs.current[index]}
           key={index}
           index={index}
           stroke="#fff"
