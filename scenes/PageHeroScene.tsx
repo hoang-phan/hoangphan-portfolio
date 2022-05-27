@@ -13,10 +13,12 @@ export default class PageHeroScene {
   camera: any;
   avatarMesh: any;
   avatarBody: any;
+  bounds: any;
 
-  constructor(renderer, scene) {
+  constructor(renderer, scene, bounds) {
     this.renderer = renderer;
     this.scene = scene;
+    this.bounds = bounds;
 
     this.setupLight();
     this.setupPhysics();
@@ -67,6 +69,7 @@ export default class PageHeroScene {
   setupLetters = (name) => {
     const loader = new FontLoader();
     this.letters = [];
+    const textMaterial = new THREE.MeshPhongMaterial({ color: "#444" });
 
     loader.load("fonts/helvetiker_regular.typeface.json", (font) => {
       name.split("").forEach((letter, index) => {
@@ -79,7 +82,6 @@ export default class PageHeroScene {
           bevelOffset: 0,
           bevelSegments: 5
         });
-        const textMaterial = new THREE.MeshPhongMaterial({ color: "#444" });
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
         textMesh.position.set(99.8 + index * 0.32 + (index == 5 ? 0.03 : 0), 102 + index % 4, 100);
         textMesh.scale.set(0.008, 0.0035, 0.002);
@@ -129,14 +131,8 @@ export default class PageHeroScene {
   }
 
   render = () => {
-    if (innerWidth >= innerHeight) {
-      this.renderer.setViewport(innerWidth * 0.7, 0, innerWidth * 0.3, innerHeight);
-      this.renderer.setScissor(innerWidth * 0.7, 0, innerWidth * 0.3, innerHeight);
-    } else {
-      const width = Math.min(innerHeight * 0.3, innerWidth);
-      this.renderer.setViewport((innerWidth - width) / 2, innerHeight * 0.8, width, innerHeight * 0.2);
-      this.renderer.setScissor((innerWidth - width) / 2, innerHeight * 0.8, width, innerHeight * 0.2);
-    }
+    this.renderer.setViewport(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+    this.renderer.setScissor(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     this.renderer.setScissorTest(true);
     this.renderer.render(this.scene, this.camera);
     this.updatePhysics();
@@ -144,9 +140,11 @@ export default class PageHeroScene {
 
   updatePhysics = () => {
     this.world.step(1 / 60);
-    this.letters.forEach((letter) => {
+    this.letters.forEach((letter, index) => {
       const bodyPos = letter.body.position;
-      letter.mesh.position.set(bodyPos.x - letter.bound.x / 2, bodyPos.y - letter.bound.y / 2, bodyPos.z - letter.bound.z / 2);
+    //   letter.mesh.position.set(bodyPos.x - letter.bound.x / 2, bodyPos.y - letter.bound.y / 2, bodyPos.z - letter.bound.z / 2);
+      // if (index == 0) letter.mesh.position.copy(bodyPos);
+      letter.mesh.position.copy(letter.body.position);
       letter.mesh.quaternion.copy(letter.body.quaternion);
     });
     this.avatarMesh.position.copy(this.avatarBody.position);

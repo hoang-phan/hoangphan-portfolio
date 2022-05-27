@@ -13,10 +13,12 @@ export default class BodyScene {
   camera: any;
   controls: any;
   onLoad: any;
+  bounds: any;
 
-  constructor(renderer, scene) {
+  constructor(renderer, scene, bounds) {
     this.renderer = renderer;
     this.scene = scene;
+    this.bounds = bounds;
 
     this.setupLight();
     this.setupObjects();
@@ -188,14 +190,8 @@ export default class BodyScene {
       TWEEN.update();
     }
 
-    if (window.innerWidth >= window.innerHeight) {
-      this.renderer.setViewport(0, 0, window.innerWidth * 0.7, window.innerHeight);
-      this.renderer.setScissor(0, 0, window.innerWidth * 0.7, window.innerHeight);
-    } else {
-      this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight * 0.8);
-      this.renderer.setScissor(0, 0, window.innerWidth, window.innerHeight * 0.8);
-    }
-    this.renderer.setScissorTest(true);
+    this.renderer.setViewport(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+    this.renderer.setScissor(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     this.renderer.render(this.scene, this.camera);
   }
 }

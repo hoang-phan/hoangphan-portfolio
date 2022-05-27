@@ -37,7 +37,8 @@ const MainScene: React.FC = () => {
   const [renderer, setRenderer] = useState<any>()
   const [scene] = useState(new THREE.Scene());
   const [object2DPositions, setObject2DPositions] = useState<any>({});
-  const [bodySceneLoaded, setBodySceneLoaded] = useState(false);
+  // const [bodySceneLoaded, setBodySceneLoaded] = useState(false);
+  const [bodySceneLoaded, setBodySceneLoaded] = useState(true);
   const [ready, setReady] = useState(false);
   const [pageOpening, setPageOpening] = useState(null);
   const [pageBound, setPageBound] = useState([0, 0, 0, 0]);
@@ -62,11 +63,25 @@ const MainScene: React.FC = () => {
       container.appendChild(renderer.domElement);
       setRenderer(renderer);
 
-      pageHeroScene = new PageHeroScene(renderer, scene);
-      bodyScene = new BodyScene(renderer, scene);
-      bodyScene.onLoad = () => {
-        setBodySceneLoaded(true);
+      let bodySceneBounds = {x: 0, y: 0};
+      let pageHeroSceneBounds = {};
+
+      if (innerWidth > innerHeight) {
+        bodySceneBounds.width = innerWidth * 0.7;
+        bodySceneBounds.height = innerHeight;
+        pageHeroSceneBounds = {x: innerWidth * 0.7, y: 0, width: innerWidth * 0.3, height: innerHeight};
+      } else {
+        bodySceneBounds.width = innerWidth;
+        bodySceneBounds.height = innerHeight * 0.8;
+        const heroWidth = Math.min(innerHeight * 0.3, innerWidth);
+        pageHeroSceneBounds = {x: (innerWidth - heroWidth) / 2, y: innerHeight * 0.8, width: heroWidth, height: innerHeight * 0.2};
       }
+
+      pageHeroScene = new PageHeroScene(renderer, scene, pageHeroSceneBounds);
+      // bodyScene = new BodyScene(renderer, scene, bodySceneBounds);
+      // bodyScene.onLoad = () => {
+      //   setBodySceneLoaded(true);
+      // }
 
       titleRef.current.addEventListener("mousemove", (e) => {
         titleRef.current.querySelector(".title-overlay").style.width = `${e.pageX - titleRef.current.getBoundingClientRect().left}px`;
@@ -112,8 +127,10 @@ const MainScene: React.FC = () => {
   }
 
   const resetScene = () => {
-    bodyScene.reset();
-    moveMenu();
+    if (bodyScene) {
+      bodyScene.reset();
+      moveMenu();
+    }
   }
 
   useEffect(() => {
