@@ -37,8 +37,7 @@ const MainScene: React.FC = () => {
   const [renderer, setRenderer] = useState<any>()
   const [scene] = useState(new THREE.Scene());
   const [object2DPositions, setObject2DPositions] = useState<any>({});
-  // const [bodySceneLoaded, setBodySceneLoaded] = useState(false);
-  const [bodySceneLoaded, setBodySceneLoaded] = useState(true);
+  const [bodySceneLoaded, setBodySceneLoaded] = useState(false);
   const [ready, setReady] = useState(false);
   const [pageOpening, setPageOpening] = useState(null);
   const [pageBound, setPageBound] = useState([0, 0, 0, 0]);
@@ -78,10 +77,10 @@ const MainScene: React.FC = () => {
       }
 
       pageHeroScene = new PageHeroScene(renderer, scene, pageHeroSceneBounds);
-      // bodyScene = new BodyScene(renderer, scene, bodySceneBounds);
-      // bodyScene.onLoad = () => {
-      //   setBodySceneLoaded(true);
-      // }
+      bodyScene = new BodyScene(renderer, scene, bodySceneBounds);
+      bodyScene.onLoad = () => {
+        setBodySceneLoaded(true);
+      }
 
       titleRef.current.addEventListener("mousemove", (e) => {
         titleRef.current.querySelector(".title-overlay").style.width = `${e.pageX - titleRef.current.getBoundingClientRect().left}px`;

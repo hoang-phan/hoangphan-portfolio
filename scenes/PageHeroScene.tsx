@@ -9,7 +9,7 @@ export default class PageHeroScene {
   renderer: any;
   scene: any;
   world: any;
-  letters: any;
+  objects: any;
   camera: any;
   avatarMesh: any;
   avatarBody: any;
@@ -19,11 +19,12 @@ export default class PageHeroScene {
     this.renderer = renderer;
     this.scene = scene;
     this.bounds = bounds;
+    this.objects = {}
 
     this.setupLight();
     this.setupPhysics();
     this.setupShadowPlane();
-    this.setupLetters("hoang.phan");
+    this.setupObjects();
     this.setupCamera();
   }
 
@@ -43,14 +44,21 @@ export default class PageHeroScene {
   }
 
   setupPhysics = () => {
-    this.world = new CANNON.World();
-    this.world.gravity = new CANNON.Vec3(0, -5, 0);
+    this.worker = new Worker(new URL('../workers/physics.js', import.meta.url));
+    this.worker.onmessage = ({data}) => {
+      Object.keys(data || {}).forEach((id) => {
+        this.objects[id].position.copy(data[id].position);
+        this.objects[id].quaternion.copy(data[id].quaternion);
+      });
+    };
+    this.worker.postMessage({type: "setup"});
   }
 
   setupShadowPlane = () => {
     const width = 50;
     const height = 0.1;
     const depth = 50;
+    const id = "plane";
 
     const planeGeometry = new THREE.BoxGeometry(width, height, depth);
     const planeMaterial = new THREE.ShadowMaterial();
@@ -59,20 +67,27 @@ export default class PageHeroScene {
     planeMesh.receiveShadow = true;
     planeMesh.position.set(101, 100, 100);
     this.scene.add(planeMesh);
+    this.objects[id] = planeMesh;
 
-    const shape = new CANNON.Box(new CANNON.Vec3(width / 2, height / 2, depth / 2));
-    const body = new CANNON.Body({ mass: 0, shape });
-    body.position.copy(planeMesh.position);
-    this.world.add(body);
+    const { x, y, z } = planeMesh.position;
+    this.worker.postMessage({
+      type: "create-object",
+      obj: {
+        id,
+        x, y, z, width, height, depth,
+        mass: 0,
+      }
+    });
   }
 
-  setupLetters = (name) => {
+  setupObjects = () => {
+    const name = "hoang.phan";
     const loader = new FontLoader();
-    this.letters = [];
     const textMaterial = new THREE.MeshPhongMaterial({ color: "#444" });
 
     loader.load("fonts/helvetiker_regular.typeface.json", (font) => {
       name.split("").forEach((letter, index) => {
+        const textId = `letter-${index}`;
         const textGeometry = new TextGeometry(letter, {
           font: font,
           size: 40,
@@ -83,24 +98,29 @@ export default class PageHeroScene {
           bevelSegments: 5
         });
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(99.8 + index * 0.32 + (index == 5 ? 0.03 : 0), 102 + index % 4, 100);
+        textMesh.position.set(100 + index * 0.32 + (index == 5 ? 0.03 : 0), 102 + index % 4, 100);
         textMesh.scale.set(0.008, 0.0035, 0.002);
         textMesh.rotation.y = 0.5;
         textMesh.castShadow = true;
         this.scene.add(textMesh);
+        this.objects[textId] = textMesh;
 
         const box = new THREE.Box3().setFromObject(textMesh);
         const bound = box.max.clone().sub(box.min);
-        const shape = new CANNON.Box(new CANNON.Vec3(bound.x / 2, bound.y / 2, bound.z / 2));
-        const body = new CANNON.Body({ mass: 5, shape });
-        body.position.copy(textMesh.position.clone().add(bound.clone().divideScalar(2)));
-        body.quaternion.x = 0.03 * (index % 5);
-        this.world.add(body);
-
-        this.letters.push({ mesh: textMesh, bound, body });
+        const { x, y, z } = textMesh.position;
+        this.worker.postMessage({
+          type: "create-object",
+          obj: {
+            id: textId,
+            x, y, z, width: bound.x, height: bound.y, depth: bound.z,
+            quaternionX: 0.03 * (index % 5),
+            mass: 5,
+          }
+        });
       });
     });
 
+    const avatarId = "avatar";
     const avatarGeometry = new THREE.BoxGeometry(0.4, 0.2, 0.2);
     const avatarTexture = new THREE.TextureLoader().load('hoang.jpg');
     const avatarMaterial = [
@@ -112,16 +132,21 @@ export default class PageHeroScene {
       new THREE.MeshBasicMaterial({ map: avatarTexture }),
     ];
     this.avatarMesh = new THREE.Mesh(avatarGeometry, avatarMaterial);
-    this.avatarMesh.position.set(103.5, 110, 100);
+    this.avatarMesh.position.set(103.4, 110, 100);
     this.avatarMesh.scale.y = -1;
     this.scene.add(this.avatarMesh);
 
-    const avatarShape = new CANNON.Box(new CANNON.Vec3(0.2, 0.1, 0.1));
-    this.avatarBody = new CANNON.Body({ mass: 5, shape: avatarShape });
-    this.avatarBody.position.copy(this.avatarMesh.position);
-    this.avatarBody.quaternion.x = 0.25;
-    this.avatarBody.quaternion.y = 0.15;
-    this.world.add(this.avatarBody);
+    const {x, y, z} = this.avatarMesh.position;
+    this.worker.postMessage({
+      type: "create-object",
+      obj: {
+        id: avatarId,
+        x, y, z, width: 0.4, height: 0.2, depth: 0.2,
+        mass: 5,
+        quaternionX: 0.25, quarternionY: 0.15,
+      }
+    });
+    this.objects[avatarId] = this.avatarMesh;
   }
 
   setupCamera = () => {
@@ -135,19 +160,6 @@ export default class PageHeroScene {
     this.renderer.setScissor(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     this.renderer.setScissorTest(true);
     this.renderer.render(this.scene, this.camera);
-    this.updatePhysics();
-  }
-
-  updatePhysics = () => {
-    this.world.step(1 / 60);
-    this.letters.forEach((letter, index) => {
-      const bodyPos = letter.body.position;
-    //   letter.mesh.position.set(bodyPos.x - letter.bound.x / 2, bodyPos.y - letter.bound.y / 2, bodyPos.z - letter.bound.z / 2);
-      // if (index == 0) letter.mesh.position.copy(bodyPos);
-      letter.mesh.position.copy(letter.body.position);
-      letter.mesh.quaternion.copy(letter.body.quaternion);
-    });
-    this.avatarMesh.position.copy(this.avatarBody.position);
-    this.avatarMesh.quaternion.copy(this.avatarBody.quaternion);
+    this.worker.postMessage({type: "update"});
   }
 }

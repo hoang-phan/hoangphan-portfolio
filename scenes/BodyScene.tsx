@@ -75,7 +75,6 @@ export default class BodyScene {
       whRatio = 1.5;
     }
 
-    console.log(whRatio);
     this.target = new THREE.Vector3(0, 0, 0);
     this.camera = new THREE.OrthographicCamera(2 / whRatio * scale, -2 / whRatio * scale, scale, -scale, 0.01, 50000);
     this.camera.position.set(-5, 4, 5);
