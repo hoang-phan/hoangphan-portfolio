@@ -27,6 +27,9 @@ const caretSize = Math.min(window.innerWidth, window.innerHeight) * 0.15;
 const caretFontSize = window.innerWidth > 640 ? "large" : "medium";
 const caretLetterSize = caretSize * 0.4;;
 const caretLetterOffset = caretSize * 0.15;
+let lastTime;
+let tick = 0;
+let deltaTime = 17;
 let pageHeroScene = null;
 let bodyScene = null;
 
@@ -59,19 +62,27 @@ const MainScene: React.FC = () => {
   }, []);
 
   const animate = () => {
-    if (frame < 315) {
+    const deltaFrame = Math.ceil(170 * 17 / deltaTime);
+
+    if (frame < 245 + deltaFrame) {
       frame += 1;
-    } else if (frame < 316) {
+    } else if (frame < 246 + deltaFrame) {
       frame += 1;
       setReady(true);
       moveMenu();
     }
 
-    if (frame >= 70 && bodyScene) {
-      bodyScene.render(frame - 70);
+    if (frame >= deltaFrame && bodyScene) {
+      bodyScene.render(frame - deltaFrame);
     }
 
-    if (frame < 70 && pageHeroScene) {
+    if (frame < deltaFrame && pageHeroScene) {
+      if (lastTime) {
+        const dt = performance.now() - lastTime;
+        deltaTime = (deltaTime * tick + dt) / (tick + 1);
+      }
+      lastTime = performance.now();
+      tick += 1;
       pageHeroScene.render();
     }
 
