@@ -11,6 +11,8 @@ class PageHeroScene extends BaseScene {
   objects: any;
   avatarMesh: any;
   avatarBody: any;
+  interval: any;
+  worker: Worker;
 
   constructor(container) {
     super(container);
