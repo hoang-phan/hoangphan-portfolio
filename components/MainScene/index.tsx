@@ -59,19 +59,19 @@ const MainScene: React.FC = () => {
   }, []);
 
   const animate = () => {
-    if (frame < 245) {
+    if (frame < 315) {
       frame += 1;
-    } else if (frame < 246) {
+    } else if (frame < 316) {
       frame += 1;
       setReady(true);
       moveMenu();
     }
 
-    if (bodyScene) {
-      bodyScene.render(frame);
+    if (frame >= 70 && bodyScene) {
+      bodyScene.render(frame - 70);
     }
 
-    if (pageHeroScene) {
+    if (frame < 70 && pageHeroScene) {
       pageHeroScene.render();
     }
 
