@@ -19,7 +19,7 @@ import Employment from '../Employment';
 import PetProjects from '../PetProjects';
 import AboutMe from '../AboutMe';
 import ContactMe from '../ContactMe';
-import { Container, BodyModel, Menu, Hero } from './styles'
+import { Container, BodyModel, HeroModel, Menu, Hero, MainWrapper, MainContent } from './styles'
 
 let req = null;
 let frame = 0;
@@ -32,9 +32,9 @@ let bodyScene = null;
 
 const MainScene: React.FC = () => {
   const refBody = useRef<HTMLDivElement>(null);
+  const refHero = useRef<HTMLDivElement>(null);
   const titleRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false)
-  const [renderer, setRenderer] = useState<any>()
   const [scene] = useState(new THREE.Scene());
   const [object2DPositions, setObject2DPositions] = useState<any>({});
   const [bodySceneLoaded, setBodySceneLoaded] = useState(false);
@@ -43,62 +43,19 @@ const MainScene: React.FC = () => {
   const [pageBound, setPageBound] = useState([0, 0, 0, 0]);
 
   useEffect(() => {
-    const { current: container } = refBody;
-
-    if (container && !renderer) {
-      const scw = container.clientWidth;
-      const sch = container.clientHeight;
-
-      const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
-      });
-
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(scw, sch);
-      renderer.outputEncoding = THREE.sRGBEncoding;
-      renderer.shadowMap.enabled = true;
-
-      container.appendChild(renderer.domElement);
-      setRenderer(renderer);
-
-      let bodySceneBounds = {x: 0, y: 0};
-      let pageHeroSceneBounds = {};
-
-      if (innerWidth > innerHeight) {
-        bodySceneBounds.width = innerWidth * 0.7;
-        bodySceneBounds.height = innerHeight;
-        pageHeroSceneBounds = {x: innerWidth * 0.7, y: 0, width: innerWidth * 0.3, height: innerHeight};
-      } else {
-        bodySceneBounds.width = innerWidth;
-        bodySceneBounds.height = innerHeight * 0.8;
-        const heroWidth = Math.min(innerHeight * 0.3, innerWidth);
-        pageHeroSceneBounds = {x: (innerWidth - heroWidth) / 2, y: innerHeight * 0.8, width: heroWidth, height: innerHeight * 0.2};
-      }
-
-      pageHeroScene = new PageHeroScene(renderer, scene, pageHeroSceneBounds);
-      bodyScene = new BodyScene(renderer, scene, bodySceneBounds);
-      bodyScene.onLoad = () => {
-        setBodySceneLoaded(true);
-      }
-
-      titleRef.current.addEventListener("mousemove", (e) => {
-        titleRef.current.querySelector(".title-overlay").style.width = `${e.pageX - titleRef.current.getBoundingClientRect().left}px`;
-      });
-
-      titleRef.current.addEventListener("mouseleave", (e) => {
-        titleRef.current.querySelector(".title-overlay").style.width = 0;
-      });
+    pageHeroScene = new PageHeroScene(refHero.current);
+    bodyScene = new BodyScene(refBody.current);
+    bodyScene.onLoad = () => {
+      setBodySceneLoaded(true);
     }
 
-    return () => {
-      if (req) {
-        cancelAnimationFrame(req);
-      }
-      if (renderer) {
-        renderer.dispose();
-      }
-    }
+    titleRef.current.addEventListener("mousemove", (e) => {
+      titleRef.current.querySelector(".title-overlay").style.width = `${e.pageX - titleRef.current.getBoundingClientRect().left}px`;
+    });
+
+    titleRef.current.addEventListener("mouseleave", (e) => {
+      titleRef.current.querySelector(".title-overlay").style.width = 0;
+    });
   }, []);
 
   const animate = () => {
@@ -189,63 +146,72 @@ const MainScene: React.FC = () => {
 
   return (
     <Container>
-      <Menu>
-        {menuItem('board', 'About Me', <FaceIcon fontSize={caretFontSize}/>)}
-        {menuItem('shelf', 'Education', <SchoolIcon fontSize={caretFontSize}/>)}
-        {menuItem('macbook', 'Pet Projects', <PetsIcon fontSize={caretFontSize}/>)}
-        {menuItem('imac', 'Employment', <WorkIcon fontSize={caretFontSize}/>)}
-        {
-          <div className={`caret ${!pageOpening && 'hidden'}`} style={{width: caretSize, height: caretSize}} onClick={back}>
-            <div className="menu-label">
-              <CurvedText text="Back" objectSize={caretLetterSize} offset={caretLetterOffset} />
+      <MainWrapper>
+        <MainContent>
+          <Menu>
+            {menuItem('board', 'About Me', <FaceIcon fontSize={caretFontSize}/>)}
+            {menuItem('shelf', 'Education', <SchoolIcon fontSize={caretFontSize}/>)}
+            {menuItem('macbook', 'Pet Projects', <PetsIcon fontSize={caretFontSize}/>)}
+            {menuItem('imac', 'Employment', <WorkIcon fontSize={caretFontSize}/>)}
+            {
+              pageOpening === "About Me" && (
+                <AboutMe pageBound={pageBound} />
+              )
+            }
+            {
+              pageOpening === "Education" && (
+                <Education />
+              )
+            }
+            {
+              pageOpening === "Employment" && (
+                <Employment pageBound={pageBound} />
+              )
+            }
+            {
+              pageOpening === "Pet Projects" && (
+                <PetProjects pageBound={pageBound} />
+              )
+            }
+            {
+              pageOpening === "Contact Me" && (
+                <ContactMe />
+              )
+            }
+          </Menu>
+          <BodyModel ref={refBody}>
+            {
+              loading && <p>Loading...</p>
+            }
+          </BodyModel>
+        </MainContent>
+        <Hero>
+          <Menu>
+            <div className={`caret back ${pageOpening ? '' : 'hidden'}`} style={{width: caretSize, height: caretSize}} onClick={back}>
+              <div className="menu-label">
+                <CurvedText text="Back" objectSize={caretLetterSize} offset={caretLetterOffset} />
+              </div>
+              <div className="menu-icon">
+                <ArrowBackIcon fontSize={caretFontSize}/>
+              </div>
             </div>
-            <div className="menu-icon">
-              <ArrowBackIcon fontSize={caretFontSize}/>
-            </div>
-          </div>
-        }
-        {
-          pageOpening === "About Me" && (
-            <AboutMe pageBound={pageBound} />
-          )
-        }
-        {
-          pageOpening === "Education" && (
-            <Education />
-          )
-        }
-        {
-          pageOpening === "Employment" && (
-            <Employment pageBound={pageBound} />
-          )
-        }
-        {
-          pageOpening === "Pet Projects" && (
-            <PetProjects pageBound={pageBound} />
-          )
-        }
-        {
-          pageOpening === "Contact Me" && (
-            <ContactMe />
-          )
-        }
-      </Menu>
-      <BodyModel ref={refBody}>
-        {
-          loading && <p>Loading...</p>
-        }
-      </BodyModel>
-      <Hero>
-        {pageOpening != "Contact Me" && (
-          <Button variant="contained" color="primary" startIcon={<EmailIcon />} onClick={() => setPageOpening("Contact Me")}>
-            Contact Me
-          </Button>
-        )}
-        <h1 className={bodySceneLoaded ? "ready" : ""} ref={titleRef}>
-          <span className="title">{pageOpening ? pageOpening : "Web Developer"}</span>
-          <span className="title-overlay">{pageOpening ? pageOpening : "Web Developer"}</span>
-        </h1>
-      </Hero>
+          </Menu>
+          {pageOpening != "Contact Me" && (
+            <Button variant="contained" color="primary" startIcon={<EmailIcon />} onClick={() => setPageOpening("Contact Me")}>
+              Contact Me
+            </Button>
+          )}
+          <HeroModel ref={refHero}>
+            {
+              loading && <p>Loading...</p>
+            }
+          </HeroModel>
+          <h1 className={bodySceneLoaded ? "ready" : ""} ref={titleRef}>
+            <span className="title">{pageOpening ? pageOpening : "Web Developer"}</span>
+            <span className="title-overlay">{pageOpening ? pageOpening : "Web Developer"}</span>
+          </h1>
+        </Hero>
+      </MainWrapper>
     </Container>
   )
 }

@@ -5,9 +5,6 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import * as CANNON from 'cannon';
 
-const basePositionX = 5;
-const basePositionY = 5;
-const basePositionZ = 0;
 let clock = 0;
 
 export default class PageHeroScene {
@@ -18,12 +15,21 @@ export default class PageHeroScene {
   camera: any;
   avatarMesh: any;
   avatarBody: any;
-  bounds: any;
+  container: any;
 
-  constructor(renderer, scene, bounds) {
-    this.renderer = renderer;
-    this.scene = scene;
-    this.bounds = bounds;
+  constructor(container) {
+    const scw = container.clientWidth;
+    const sch = container.clientHeight;
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+    });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.outputEncoding = THREE.sRGBEncoding;
+    this.renderer.setSize(scw, sch);
+    this.renderer.shadowMap.enabled = true;
+    container.appendChild(this.renderer.domElement);
+    this.scene = new THREE.Scene();
     this.objects = {}
 
     this.setupLight();
@@ -43,8 +49,8 @@ export default class PageHeroScene {
 
   setupLight = () => {
     const spotLight = new THREE.SpotLight( 0xffffff, 1 );
-    spotLight.position.set( basePositionX, basePositionY + 2, basePositionZ );
-    spotLight.target.position.set( basePositionX + 1, basePositionY, basePositionZ );
+    spotLight.position.set( 0, 2, 0 );
+    spotLight.target.position.set( 1, 0, 0 );
     spotLight.castShadow = true;
     spotLight.shadow.mapSize.width = 100;
     spotLight.shadow.mapSize.height = 100;
@@ -78,7 +84,7 @@ export default class PageHeroScene {
     planeMaterial.opacity = 0.5;
     const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
     planeMesh.receiveShadow = true;
-    planeMesh.position.set(basePositionX + 1, basePositionY, basePositionZ);
+    planeMesh.position.set(1, 0, 0);
     this.scene.add(planeMesh);
     this.objects[id] = planeMesh;
 
@@ -111,7 +117,7 @@ export default class PageHeroScene {
           bevelSegments: 5
         });
         const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(basePositionX + index * 0.32 + (index == 5 ? 0.03 : 0), basePositionY + 2 + index % 4, basePositionZ);
+        textMesh.position.set(index * 0.32 + (index == 5 ? 0.03 : 0), 2 + index % 4, 0);
         textMesh.scale.set(0.008, 0.0035, 0.002);
         textMesh.rotation.y = 0.5;
         textMesh.castShadow = true;
@@ -145,7 +151,7 @@ export default class PageHeroScene {
       new THREE.MeshBasicMaterial({ map: avatarTexture }),
     ];
     this.avatarMesh = new THREE.Mesh(avatarGeometry, avatarMaterial);
-    this.avatarMesh.position.set(basePositionX + 3.4, basePositionY + 10, basePositionZ);
+    this.avatarMesh.position.set(3.4, 10, 0);
     this.avatarMesh.scale.y = -1;
     this.scene.add(this.avatarMesh);
 
@@ -164,14 +170,11 @@ export default class PageHeroScene {
 
   setupCamera = () => {
     this.camera = new THREE.OrthographicCamera(2, -2, 1, -1, 0.01, 500);
-    this.camera.position.set(basePositionX + 2.5, basePositionY + 0.2, basePositionZ - 5);
-    this.camera.lookAt(new THREE.Vector3(basePositionX + 1.8, basePositionY, basePositionZ));
+    this.camera.position.set(2.5, 0.2, 0 - 5);
+    this.camera.lookAt(new THREE.Vector3(1.8, 0, 0));
   }
 
   render = () => {
-    this.renderer.setViewport(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-    this.renderer.setScissor(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-    this.renderer.setScissorTest(true);
     this.renderer.render(this.scene, this.camera);
   }
 }

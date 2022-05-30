@@ -13,12 +13,20 @@ export default class BodyScene {
   camera: any;
   controls: any;
   onLoad: any;
-  bounds: any;
+  container: any;
 
-  constructor(renderer, scene, bounds) {
-    this.renderer = renderer;
-    this.scene = scene;
-    this.bounds = bounds;
+  constructor(container) {
+    const scw = container.clientWidth;
+    const sch = container.clientHeight;
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+    });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.outputEncoding = THREE.sRGBEncoding;
+    this.renderer.setSize(scw, sch);
+    container.appendChild(this.renderer.domElement);
+    this.scene = new THREE.Scene();
 
     this.setupLight();
     this.setupObjects();
@@ -94,13 +102,11 @@ export default class BodyScene {
     vector.set( position.x, position.y, position.z );
     vector.project(this.camera);
 
-    const width = window.innerWidth >= window.innerHeight ? canvas.width * 0.7 : canvas.width;
-    const height = window.innerWidth >= window.innerHeight ? canvas.height : canvas.height * 0.8;
-    const offsetWidth = 0;
-    const offsetHeight = window.innerWidth >= window.innerHeight ? 0 : canvas.height * 0.2;
+    const width = canvas.width;
+    const height = canvas.height;
 
-    vector.x = Math.round( (   vector.x + 1 ) * width / 2 / devicePixelRatio + offsetWidth / devicePixelRatio);
-    vector.y = Math.round( ( - vector.y + 1 ) * height / 2 / devicePixelRatio + offsetHeight / devicePixelRatio);
+    vector.x = Math.round( (   vector.x + 1 ) * width / 2 / devicePixelRatio);
+    vector.y = Math.round( ( - vector.y + 1 ) * height / 2 / devicePixelRatio);
     vector.z = 0;
     return vector;
   }
@@ -189,8 +195,6 @@ export default class BodyScene {
       TWEEN.update();
     }
 
-    this.renderer.setViewport(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-    this.renderer.setScissor(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     this.renderer.render(this.scene, this.camera);
   }
 }
