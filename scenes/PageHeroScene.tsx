@@ -1,36 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import * as CANNON from 'cannon';
+import BaseScene from './BaseScene';
 
 let clock = 0;
 
-export default class PageHeroScene {
-  renderer: any;
-  scene: any;
+class PageHeroScene extends BaseScene {
   world: any;
   objects: any;
-  camera: any;
   avatarMesh: any;
   avatarBody: any;
-  container: any;
 
   constructor(container) {
-    const scw = container.clientWidth;
-    const sch = container.clientHeight;
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-    });
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.outputEncoding = THREE.sRGBEncoding;
-    this.renderer.setSize(scw, sch);
+    super(container);
     this.renderer.shadowMap.enabled = true;
     container.appendChild(this.renderer.domElement);
-    this.scene = new THREE.Scene();
-    this.objects = {}
+    this.objects = {};
 
     this.setupLight();
     this.setupPhysics();
@@ -178,3 +164,5 @@ export default class PageHeroScene {
     this.renderer.render(this.scene, this.camera);
   }
 }
+
+export default PageHeroScene;

@@ -3,30 +3,18 @@ import * as THREE from 'three';
 import TWEEN from 'tween/tween';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Desk, Macbook, Imac, Shelf, Board, Tree, Chair, Wall, Floor } from '../objects';
+import BaseScene from './BaseScene';
 
-export default class BodyScene {
-  renderer: any;
-  scene: any;
+class BodyScene extends BaseScene {
   loaded: boolean;
   objects: object;
   target: any;
-  camera: any;
   controls: any;
   onLoad: any;
-  container: any;
 
   constructor(container) {
-    const scw = container.clientWidth;
-    const sch = container.clientHeight;
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-    });
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.outputEncoding = THREE.sRGBEncoding;
-    this.renderer.setSize(scw, sch);
+    super(container);
     container.appendChild(this.renderer.domElement);
-    this.scene = new THREE.Scene();
 
     this.setupLight();
     this.setupObjects();
@@ -198,3 +186,5 @@ export default class BodyScene {
     this.renderer.render(this.scene, this.camera);
   }
 }
+
+export default BodyScene;
