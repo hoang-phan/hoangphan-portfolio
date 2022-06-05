@@ -44,6 +44,9 @@ export async function getStaticProps() {
 
   for (let project of projects) {
     project.company.logo = await saveStaticImage(project.company.logo_url);
+    if (project.image_url) {
+      project.image = await saveStaticImage(project.image_url);
+    }
   }
 
   for (let project of petProjects) {

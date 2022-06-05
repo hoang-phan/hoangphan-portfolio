@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Container, Scene } from './styles';
+import React, { useState, useEffect, useContext, useRef, createRef } from 'react';
+import { Container, TextPanel, ScrollWrapper } from './styles';
 import API from '../../services/api';
 import { AppContext } from '../../contexts/AppProvider';
 
 interface IEmploymentProps {
   pageBound?: number[];
 }
+
+let scrollWrapperTop;
 
 const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) => {
   const [gameState, setGameState] = useState({
@@ -22,6 +24,9 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
   const prevProject = projects[prevIndex];
   const activeCompany = activeProject && activeProject.company;
   const prevCompany = prevProject && prevProject.company;
+  const refScroller = useRef(null);
+  const refScrollWrapper = useRef(null);
+  const refProjects = useRef(projects.map(createRef));
 
   const width = pageBound[3] * 0.94;
   const height = pageBound[2] * 0.69;
@@ -29,6 +34,7 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
   const left = pageBound[1] + width * 0.009;
   const characterWidth = width * 0.15;
   const characterHeight = characterWidth * 1.25;
+  const logoSize = 5 + width * 0.1;
 
   const updateGameState = (newData) => setGameState(gameState =>  ({...gameState, ...newData}));
 
@@ -72,6 +78,25 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
     }
   }, [gameState]);
 
+  useEffect(() => {
+    scrollWrapperTop = refScrollWrapper.current.getBoundingClientRect().top;
+  }, [])
+
+  const handleScrollChanged = () => {
+    const nextIndex = refProjects.current.findIndex((block) => {
+      const blockTop = block.current.getBoundingClientRect().top;
+      return blockTop > scrollWrapperTop + 10;
+    });
+    const newIndex = nextIndex > -1 ? nextIndex - 1 : refProjects.current.length - 1;
+    if (newIndex != activeProjectIndex && !changingProject) {
+      if (!changingProject) {
+        handleProjectChange(newIndex, true);
+      } else {
+        updateGameState({activeProjectIndex: newIndex});
+      }
+    }
+  }
+
   const getCharacterState = () => {
     if (gameState.y > 0) {
       return 'Jump';
@@ -90,8 +115,9 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
     return gameState.y + height * 0.1;
   }
 
-  const handleProjectChange = (index) => {
+  const handleProjectChange = (index, scroll) => {
     if (index === 0 && gameState.activeProjectIndex > 0) {
+      setChangingProject(true);
       updateGameState({vy: 20});
     } else if (index > 0 && gameState.activeProjectIndex == 0) {
       updateGameState({activeProjectIndex: index, y: 70});
@@ -100,6 +126,11 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
       updateGameState({activeProjectIndex: index});
       setChangingProjectTransition();
     }
+
+    if (!scroll) {
+      refProjects.current[index].current.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+
     setTimeout(() => {
       if (index === 0 && gameState.activeProjectIndex > 0) {
         updateGameState({activeProjectIndex: index, y: 10});
@@ -136,39 +167,49 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
       <div className="character" style={{bottom: getCharacterBottom(), left: Math.min(gameState.x, width * 0.15), width: characterWidth, height: characterHeight}}>
         <img className={gameState.direction} src={`/${getCharacterState()}__00${gameState.frame}.png`}/>
       </div>
-      {activeProject &&
-        <div className={`project-description current ${changingProject ? "transitioning" : ""}`}>
-          <h3>{activeCompany.name}</h3>
-          <h4>{activeProject.name} ({activeProject.from_year} - {activeProject.to_year})</h4>
-          <h4 className="section-title">Summary</h4>
-          <p>{activeProject.summary}</p>
-          <h4 className="section-title">Challenge</h4>
-          <p>{activeProject.challenge}</p>
-          <h4 className="section-title">Resolution</h4>
-          <p>{activeProject.resolution}</p>
-        </div>
-      }
 
-      <div className="milestones">
-        <div className="company" style={{width: 5 + width * 0.1, height: 5 + width * 0.1}}>
-          {activeCompany &&
-            <img src={`build/${activeCompany.logo}`} />
-          }
+      <TextPanel>
+        <div className="company">
+          <div className="company-description" style={{height: logoSize / 2}}>
+            {activeCompany && activeCompany.name.toUpperCase()}
+          </div>
+          <div className="company-logo" style={{width: logoSize, height: logoSize}}>
+            {activeCompany &&
+              <img src={`build/${activeCompany.logo}`} />
+            }
+          </div>
         </div>
-        {
-          projects.map((project, index) => (
-            <div
-              className={`project ${activeProjectIndex === index ? "active" : ""}`}
-              key={project.id}
-              onClick={() => handleProjectChange(index)}
-              style={{width: 5 + width * 0.06, height: 5 + width * 0.06}}
-            />
-          ))
-        }
-      </div>
-      <Scene>
-        <div className="scroller" />
-      </Scene>
+        <div className="content-panel" style={{marginTop: -logoSize / 2}}>
+          <ScrollWrapper onScroll={handleScrollChanged} ref={refScrollWrapper}>
+            <div className="projects-description current">
+              {projects.map((project, index) => (
+                <div key={project.id} className="project-description" ref={refProjects.current[index]}>
+                  {project.image && <img className="project-image" src={`build/${project.image}`}/>}
+                  <h3>{project.name.toUpperCase()} ({project.from_year} - {project.to_year})</h3>
+                  <h4 className="section-title">Summary</h4>
+                  <p>{project.summary}</p>
+                  <h4 className="section-title">Challenge</h4>
+                  <p>{project.challenge}</p>
+                  <h4 className="section-title">Resolution</h4>
+                  <p>{project.resolution}</p>
+                </div>
+              ))}
+            </div>
+          </ScrollWrapper>
+          <div className="right-panel" style={{width: logoSize, paddingTop: logoSize / 2}}>
+            {
+              projects.map((project, index) => (
+                <div
+                  className={`project ${activeProjectIndex === index ? "active" : ""}`}
+                  key={project.id}
+                  onClick={() => handleProjectChange(index)}
+                  style={{width: 5 + width * 0.06, height: 5 + width * 0.06}}
+                />
+              ))
+            }
+          </div>
+        </div>
+      </TextPanel>
       <div style={{display: "none"}}>
         {
           Array.from(Array(10).keys()).map((i) => <img src={`/Idle__00${i}.png`} key={i} />)
