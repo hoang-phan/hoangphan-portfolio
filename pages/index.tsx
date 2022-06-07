@@ -1,14 +1,17 @@
 import type { NextPage } from 'next'
 import { useContext } from 'react';
 import { AppContext } from '../contexts/AppProvider'
-import Head from 'next/head'
-import dynamic from 'next/dynamic'
-import Image from 'next/image'
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import API from '../services/api';
 import { writeFile } from 'fs';
 import { promisify } from 'util';
 
 const writeFilePromise = promisify(writeFile);
+const AssetPreloader = dynamic(() => import('../components/AssetPreloader'), {
+  ssr: false,
+  loading: () => <p>Loading...</p>
+})
 const MainScene = dynamic(() => import('../components/MainScene'), {
   ssr: false,
   loading: () => <p>Loading...</p>
@@ -24,6 +27,7 @@ const Home: NextPage = () => {
         <link rel="shortcut icon" href="/favicon.png" />
       </Head>
       <MainScene />
+      <AssetPreloader />
     </div>
   )
 }

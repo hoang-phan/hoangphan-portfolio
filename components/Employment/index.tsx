@@ -210,17 +210,6 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
           </div>
         </div>
       </TextPanel>
-      <div style={{display: "none"}}>
-        {
-          Array.from(Array(10).keys()).map((i) => <img src={`/Idle__00${i}.png`} key={i} />)
-        }
-        {
-          Array.from(Array(10).keys()).map((i) => <img src={`/Run__00${i}.png`} key={i} />)
-        }
-        {
-          Array.from(Array(10).keys()).map((i) => <img src={`/Jump__00${i}.png`} key={i} />)
-        }
-      </div>
     </Container>
   );
 }
