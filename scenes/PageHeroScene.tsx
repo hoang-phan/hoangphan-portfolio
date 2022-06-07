@@ -156,7 +156,7 @@ class PageHeroScene extends BaseScene {
 
   setupAnimation = () => {
     this.interval = setInterval(() => {
-      if (clock < 170) {
+      if (clock < 180) {
         this.worker.postMessage({type: "update"});
         clock += 1;
       } else {

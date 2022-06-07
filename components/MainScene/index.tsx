@@ -63,7 +63,7 @@ const MainScene: React.FC = () => {
   }, []);
 
   const animate = () => {
-    const deltaFrame = Math.ceil(170 * 17 / deltaTime);
+    const deltaFrame = Math.ceil(180 * 17 / deltaTime);
 
     if (frame < 245 + deltaFrame) {
       frame += 1;

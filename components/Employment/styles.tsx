@@ -5,6 +5,10 @@ const Container = styled.div`
   z-index: 100;
   contain: content;
 
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
   .scene1 {
     position: absolute;
     top: 0;
@@ -126,6 +130,7 @@ const TextPanel = styled.div`
       border-radius: 50px 0 0 50px;
       margin-right: -10px;
       border: 5px solid #000;
+      min-height: 30px;
     }
   }
 
@@ -178,6 +183,22 @@ const TextPanel = styled.div`
       }
     }
   }
+
+  @media (max-width: 640px){
+    .company {
+      .company-description {
+        font-size: 1em;
+      }
+    }
+  }
+
+  @media (max-height: 480px) {
+    .company {
+      .company-description {
+        font-size: 1em;
+      }
+    }
+  }
 `
 
 const ScrollWrapper = styled.div`
@@ -191,10 +212,6 @@ const ScrollWrapper = styled.div`
   scrollbar-width: none;
   z-index: 0;
   margin-left: 4em;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
 
   .projects-description {
     padding-left: 1em;
@@ -226,10 +243,6 @@ const ScrollWrapper = styled.div`
 
     @media (max-width: 640px){
       font-size: 0.675rem;
-
-      h4.section-title {
-        display: none;
-      }
     }
 
     @media (max-height: 480px) {
