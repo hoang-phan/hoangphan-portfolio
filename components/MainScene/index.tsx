@@ -50,6 +50,7 @@ const MainScene: React.FC = () => {
     bodyScene = new BodyScene(refBody.current);
     bodyScene.onLoad = () => {
       setBodySceneLoaded(true);
+      pageHeroScene.setupAnimation();
     }
 
     titleRef.current.addEventListener("mousemove", (e) => {

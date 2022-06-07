@@ -25,14 +25,6 @@ class PageHeroScene extends BaseScene {
     this.setupShadowPlane();
     this.setupObjects();
     this.setupCamera();
-    this.interval = setInterval(() => {
-      if (clock < 170) {
-        this.worker.postMessage({type: "update"});
-        clock += 1;
-      } else {
-        clearInterval(this.interval);
-      }
-    }, 1000 / 60);
   }
 
   setupLight = () => {
@@ -160,6 +152,17 @@ class PageHeroScene extends BaseScene {
     this.camera = new THREE.OrthographicCamera(2, -2, 1, -1, 0.01, 500);
     this.camera.position.set(2.5, 0.2, 0 - 5);
     this.camera.lookAt(new THREE.Vector3(1.8, 0, 0));
+  }
+
+  setupAnimation = () => {
+    this.interval = setInterval(() => {
+      if (clock < 170) {
+        this.worker.postMessage({type: "update"});
+        clock += 1;
+      } else {
+        clearInterval(this.interval);
+      }
+    }, 1000 / 60);
   }
 
   render = () => {
