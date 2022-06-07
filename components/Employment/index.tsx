@@ -202,7 +202,7 @@ const Employment: React.FC<IEmploymentProps> = ({pageBound}: IEmploymentProps) =
                 <div
                   className={`project ${activeProjectIndex === index ? "active" : ""}`}
                   key={project.id}
-                  onClick={() => handleProjectChange(index)}
+                  onClick={() => handleProjectChange(index, false)}
                   style={{width: 5 + width * 0.06, height: 5 + width * 0.06}}
                 />
               ))
