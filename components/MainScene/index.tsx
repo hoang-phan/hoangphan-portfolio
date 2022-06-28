@@ -36,7 +36,6 @@ let bodyScene = null;
 const MainScene: React.FC = () => {
   const refBody = useRef<HTMLDivElement>(null);
   const refHero = useRef<HTMLDivElement>(null);
-  const titleRef = useRef(null);
   const [loading, setLoading] = useState<boolean>(false)
   const [scene] = useState(new THREE.Scene());
   const [object2DPositions, setObject2DPositions] = useState<any>({});
@@ -52,14 +51,6 @@ const MainScene: React.FC = () => {
       setBodySceneLoaded(true);
       pageHeroScene.setupAnimation();
     }
-
-    titleRef.current.addEventListener("mousemove", (e) => {
-      titleRef.current.querySelector(".title-overlay").style.width = `${e.pageX - titleRef.current.getBoundingClientRect().left}px`;
-    });
-
-    titleRef.current.addEventListener("mouseleave", (e) => {
-      titleRef.current.querySelector(".title-overlay").style.width = 0;
-    });
   }, []);
 
   const animate = () => {
@@ -218,10 +209,12 @@ const MainScene: React.FC = () => {
               loading && <p>Loading...</p>
             }
           </HeroModel>
-          <h1 className={bodySceneLoaded ? "ready" : ""} ref={titleRef}>
-            <span className="title">{pageOpening ? pageOpening : "Web Developer"}</span>
-            <span className="title-overlay">{pageOpening ? pageOpening : "Web Developer"}</span>
-          </h1>
+          <div className="name-wrapper">
+            <h1 className="name">Hoang Phan</h1>
+            <h1 className="jobtitle">
+              <span className="title">{pageOpening ? pageOpening : "Web Developer"}</span>
+            </h1>
+          </div>
         </Hero>
       </MainWrapper>
     </Container>

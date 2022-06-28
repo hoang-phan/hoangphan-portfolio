@@ -6,12 +6,13 @@ const Container = styled.div`
   height: 100%;
   top: 0;
   left: 0;
-  background: #d0dbe6;
+  background: #26292c;
   z-index: 100;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  color: #fff;
   
   form {
     width: 100%;

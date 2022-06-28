@@ -29,8 +29,8 @@ class PageHeroScene extends BaseScene {
 
   setupLight = () => {
     const spotLight = new THREE.SpotLight( 0xffffff, 1 );
-    spotLight.position.set( 0, 2, 0 );
-    spotLight.target.position.set( 1, 0, 0 );
+    spotLight.position.set(-0.4, 0.4, 1 );
+    spotLight.target.position.set( 0, 0, 0 );
     spotLight.castShadow = true;
     spotLight.shadow.mapSize.width = 100;
     spotLight.shadow.mapSize.height = 100;
@@ -64,7 +64,7 @@ class PageHeroScene extends BaseScene {
     planeMaterial.opacity = 0.5;
     const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
     planeMesh.receiveShadow = true;
-    planeMesh.position.set(1, 0, 0);
+    planeMesh.position.set(1, -0.1, 0);
     this.scene.add(planeMesh);
     this.objects[id] = planeMesh;
 
@@ -80,58 +80,58 @@ class PageHeroScene extends BaseScene {
   }
 
   setupObjects = () => {
-    const name = "hoang.phan";
-    const loader = new FontLoader();
-    const textMaterial = new THREE.MeshPhongMaterial({ color: "#444" });
+    // const name = "hoang.phan";
+    // const loader = new FontLoader();
+    // const textMaterial = new THREE.MeshPhongMaterial({ color: "#fff" });
 
-    loader.load("fonts/helvetiker_regular.typeface.json", (font) => {
-      name.split("").forEach((letter, index) => {
-        const textId = `letter-${index}`;
-        const textGeometry = new TextGeometry(letter, {
-          font: font,
-          size: 40,
-          bevelEnabled: true,
-          bevelThickness: 5,
-          bevelSize: 1,
-          bevelOffset: 0,
-          bevelSegments: 5
-        });
-        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(index * 0.32 + (index == 5 ? 0.03 : 0), 2 + index % 4, 0);
-        textMesh.scale.set(0.008, 0.0035, 0.002);
-        textMesh.rotation.y = 0.5;
-        textMesh.castShadow = true;
-        this.scene.add(textMesh);
-        this.objects[textId] = textMesh;
+    // loader.load("fonts/helvetiker_regular.typeface.json", (font) => {
+    //   name.split("").forEach((letter, index) => {
+    //     const textId = `letter-${index}`;
+    //     const textGeometry = new TextGeometry(letter, {
+    //       font: font,
+    //       size: 40,
+    //       bevelEnabled: true,
+    //       bevelThickness: 5,
+    //       bevelSize: 1,
+    //       bevelOffset: 0,
+    //       bevelSegments: 5
+    //     });
+    //     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    //     textMesh.position.set(index * 0.32 + (index == 5 ? 0.03 : 0), 2 + index % 4, 0);
+    //     textMesh.scale.set(0.008, 0.0035, 0.002);
+    //     textMesh.rotation.y = 0.5;
+    //     textMesh.castShadow = true;
+    //     this.scene.add(textMesh);
+    //     this.objects[textId] = textMesh;
 
-        const box = new THREE.Box3().setFromObject(textMesh);
-        const bound = box.max.clone().sub(box.min);
-        const { x, y, z } = textMesh.position;
-        this.worker.postMessage({
-          type: "create-object",
-          obj: {
-            id: textId,
-            x, y, z, width: bound.x, height: bound.y, depth: bound.z,
-            quaternionX: 0.03 * (index % 5),
-            mass: 5,
-          }
-        });
-      });
-    });
+    //     const box = new THREE.Box3().setFromObject(textMesh);
+    //     const bound = box.max.clone().sub(box.min);
+    //     const { x, y, z } = textMesh.position;
+    //     this.worker.postMessage({
+    //       type: "create-object",
+    //       obj: {
+    //         id: textId,
+    //         x, y, z, width: bound.x, height: bound.y, depth: bound.z,
+    //         quaternionX: 0.03 * (index % 5),
+    //         mass: 5,
+    //       }
+    //     });
+    //   });
+    // });
 
     const avatarId = "avatar";
-    const avatarGeometry = new THREE.BoxGeometry(0.4, 0.2, 0.2);
+    const avatarGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
     const avatarTexture = new THREE.TextureLoader().load('hoang.jpg');
     const avatarMaterial = [
-      new THREE.MeshBasicMaterial({ color: "#444" }),
-      new THREE.MeshBasicMaterial({ color: "#555" }),
-      new THREE.MeshBasicMaterial({ color: "#666" }),
-      new THREE.MeshBasicMaterial({ color: "#777" }),
-      new THREE.MeshBasicMaterial({ color: "#888" }),
-      new THREE.MeshBasicMaterial({ map: avatarTexture }),
+      new THREE.MeshBasicMaterial({ color: "#b86362" }),
+      new THREE.MeshBasicMaterial({ color: "#85a6db" }),
+      new THREE.MeshBasicMaterial({ color: "#b86362" }),
+      new THREE.MeshBasicMaterial({ color: "#d5b0a7" }),
+      new THREE.MeshBasicMaterial({ color: "#3c99dc" }),
+      new THREE.MeshBasicMaterial({ color: "#3c99dc" }),
     ];
     this.avatarMesh = new THREE.Mesh(avatarGeometry, avatarMaterial);
-    this.avatarMesh.position.set(3.4, 10, 0);
+    this.avatarMesh.position.set(3.5, 10, -2);
     this.avatarMesh.scale.y = -1;
     this.scene.add(this.avatarMesh);
 
@@ -140,9 +140,9 @@ class PageHeroScene extends BaseScene {
       type: "create-object",
       obj: {
         id: avatarId,
-        x, y, z, width: 0.4, height: 0.2, depth: 0.2,
+        x, y, z, width: 0.2, height: 0.2, depth: 0.2,
         mass: 5,
-        quaternionX: 0.25, quarternionY: 0.15,
+        quaternionX: 3, quarternionY: 0.2, quaternionZ: 1.1
       }
     });
     this.objects[avatarId] = this.avatarMesh;

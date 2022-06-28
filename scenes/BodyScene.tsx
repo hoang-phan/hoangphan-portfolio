@@ -27,12 +27,9 @@ class BodyScene extends BaseScene {
   }
 
   setupObjects = () => {
-    const wallTexture = new THREE.TextureLoader().load('wall.jpeg');
-    wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
-    wallTexture.repeat.set(3, 1);
-
-    const wallMaterial = new THREE.MeshBasicMaterial( {map: wallTexture} );
-    const floorMaterial = new THREE.MeshBasicMaterial( {color: 0x111111} );
+    const wallMaterial = new THREE.MeshBasicMaterial( {color: 0x85a6db} );
+    const wall2Material = new THREE.MeshBasicMaterial( {color: 0x85a6db} );
+    const floorMaterial = new THREE.MeshBasicMaterial( {color: 0xd5b0a7} );
 
     this.loaded = false;
     let objectsLoaded = {};
@@ -46,7 +43,7 @@ class BodyScene extends BaseScene {
       tree: new Tree(this.scene, new THREE.Vector3(1,-1.57,-2.16),new THREE.Vector3(0,Math.PI / 2,0)),
       chair: new Chair(this.scene, new THREE.Vector3(-0.5,-1.52,1.8),new THREE.Vector3(0,-2 * Math.PI / 3,0)),
       wall1: new Wall(this.scene, '1', 6, 4, new THREE.Vector3(0,0.46,-3), new THREE.Vector3(0,0,0), wallMaterial),
-      wall2: new Wall(this.scene, '2', 6, 4, new THREE.Vector3(2.98,0.46,0), new THREE.Vector3(0,Math.PI / 2,0), wallMaterial),
+      wall2: new Wall(this.scene, '2', 6, 4, new THREE.Vector3(2.98,0.46,0), new THREE.Vector3(0,Math.PI / 2,0), wall2Material),
       floor: new Floor(this.scene, '3', 6.05, 6.05, new THREE.Vector3(0,-1.64,0), new THREE.Vector3(-Math.PI / 2,0,0), floorMaterial),
     };
 
